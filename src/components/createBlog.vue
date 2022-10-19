@@ -56,39 +56,3 @@ import {marked} from 'marked';
 }
 </script>
 
-<style>
-p{
-    all: revert;
-}
-h1{
-    all:revert;
-}
-h2{
-    all:revert;
-}
-h3{
-    all:revert;
-}
-h4{
-    all:revert;
-}
-h5{
-    all:revert;
-}
-h6{
-    all:revert;
-}
-ul{
-    all:revert;
-}
-li{
-    all:revert;
-}
-ol{
-    all:revert;
-}
-a{
-    all:revert;
-}
-
-</style>
