@@ -1,5 +1,5 @@
 <template>
-    <section class="md:w-[50vw] w-[90vw] min-h-[80vh] bg-[#333333] mx-auto mt-10 rounded-lg">
+    <section class="md:w-[50vw] w-[90vw] min-h-[80vh] bg-[#222222] mx-auto mt-10 rounded-lg">
         <div class="max-w-[500px] mx-auto pt-10">
             <div class="w-[80px] mx-auto">
                 <img src="@/assets/user.png" alt="" class="w-[80px] bg-gray-300 rounded-full">
