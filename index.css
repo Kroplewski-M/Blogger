@@ -38,3 +38,6 @@ ol{
 a{
     all:revert;
 }
+code{
+    color: rgb(163, 201, 235);
+}
