@@ -1,35 +1,10 @@
-# blogger
+# Blogger
 
-This template should help get you started developing with Vue 3 in Vite.
+**App Description**
+Blogging website that allows users to create an account or log in. The user will be able to view all blogs created on the website and also write their own. Each blog will have likes and comments. Users will also be able to edit/delete their own blogs.
 
-## Recommended IDE Setup
+Tech Stack- VueJS, TailwindCSS, Supabase
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+******************************
+**Currently building the app!**
+******************************
