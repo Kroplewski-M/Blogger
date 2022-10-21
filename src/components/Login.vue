@@ -1,4 +1,8 @@
 <template>
+    <div class="flex w-[270px] mx-auto mt-16 hover:cursor-pointer">
+        <img src="@/assets/logo.png" alt="" class="w-[70px] h-[70px]">
+        <h1 class="font-bold text-[40px] mt-[10px] text-purple-400">Blogger</h1>
+    </div>
     <div class="w-[300px] md:w-[500px] h-[400px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
         <h1 class="text-purple-400 font-bold text-center text-[40px]">Login</h1>
         <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
