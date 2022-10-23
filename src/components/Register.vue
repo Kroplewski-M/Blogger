@@ -4,7 +4,7 @@
         <h1 class="font-bold text-[40px] mt-[10px] text-purple-400">Blogger</h1>
     </div>
     <div class="w-[300px] md:w-[500px] h-[500px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
-        <h1 class="text-purple-400 font-bold text-center text-[40px]">Register</h1>
+        <h1 class="text-purple-400 font-bold text-center text-[40px] mt-[5px]">Register</h1>
         <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
             <form action="" class="md:text-[20px] text-[15px]">
                 <label for="name" class="ml-[35px]">Name:</label>

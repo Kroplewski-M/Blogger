@@ -1,25 +1,29 @@
 <template>
-    <section class="max-w-[1000px] h-[100vh] mx-auto mt-16 flex space-x-10 flex-wrap">
+    <p class="text-center text-[50px] font-bold text-purple-400">View Blogs</p>
+    <section class="max-w-[1000px] h-[100vh] mx-auto mt-16 flex md:space-x-10 flex-wrap">
         <div v-for="blog in blogs">
-            <div class="w-[300px] h-[400px] bg-[#222222] rounded-md relative overflow-hidden hover:cursor-pointer">
-                <div class="w-[300px]">
-                    <img src='@/assets/blog-standard.jpg' alt="">
+            <div class="w-[300px] md:w-[350px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer">
+                <div class="md:w-[300px] w-[250px] mx-auto">
+                    <img src='@/assets/blog-standard.jpg' alt="" class="rounded-md mt-[10px]">
                 </div>
-                <div class="flex mt-[5px] ml-[5px]">
+                <h1 class="text-center -mt-[1px] text-gray-200 ">{{blog.title}}</h1>
+                <p class="text-center text-gray-500 -mt-[10px]">{{blog.overView}}</p>
+
+                <div class="absolute -bottom-3">
+                    <div class="flex">
+                        <img src="@/assets/user.png" alt="" class="w-[50px] h-[50px]">
+                        <p class="text-gray-300 ml-[5px] font-semibold">Mateusz Kroplwski</p>
+                    </div>
+                    <p class="-mt-[4px] ml-[5px] text-gray-500">{{blog.date}}</p>
+                </div>
+
+                <div class="flex absolute right-5 bottom-1">
                     <img src="@/assets/comments.png" alt="" class="w-[20px] h-[20px] mr-[5px]">
                     <p class="text-gray-500 mr-5 -mt-[1px]">5</p>
                     <img src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px]">
                     <p class="text-gray-500 -mt-[1px]">12</p>
                 </div>
-                <h1 class="text-center -mt-[5px] text-gray-200">{{blog.title}}</h1>
-                <p class="text-center text-gray-500 -mt-[10px]">{{blog.overView}}</p>
-
-                <div class="flex">
-                    <img src="@/assets/user.png" alt="" class="w-[50px] h-[50px]">
-                    <p class="text-gray-300 ml-[5px] font-semibold">Mateusz Kroplwski</p>
-                </div>
-                <p class="-mt-[4px] ml-[5px] text-gray-500">{{blog.date}}</p>
-            </div>
+            </div>!
         </div>
     </section>
 </template>
@@ -46,7 +50,6 @@ import {ref} from 'vue';
             userID: "",}
 
             });
-            console.log(blogs._rawValue);
             return{
                 blogs
             }

@@ -11,7 +11,11 @@
         <div class="float-right hover:cursor-pointer hidden md:inline" @click.prevent="accountPopUp = !accountPopUp">
             <img src="@/assets/user.png" alt="" class="w-[50px] h-[50px] rounded-full bg-[#333333] mr-5 mt-[7px]">
         </div>
-        <div class="absolute w-[300px] h-[200px] bg-[#222222] right-5 top-[60px] rounded-md border-2 border-[#111111] text-center" v-if="accountPopUp">
+        <div class="md:hidden inline absolute right-5 mt-[15px]">
+            <img src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
+        </div>
+    </nav>
+    <div class="absolute w-[300px] h-[200px] bg-[#222222] right-5 top-[60px] rounded-md border-2 border-[#111111] text-center text-purple-400" v-if="accountPopUp">
             <!-- USER IS NOT LOGGED IN -->
             <div>
                 <p class="font-semibold">You are not logged in!</p>
@@ -22,10 +26,6 @@
             <!-- USER IS LOGGED IN -->
 
         </div>
-        <div class="md:hidden inline absolute right-5 mt-[15px]">
-            <img src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
-        </div>
-    </nav>
 </template>
 
 <script>
