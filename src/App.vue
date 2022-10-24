@@ -1,5 +1,7 @@
 <template>
-  <Nav></Nav>
+  <div v-if="this.$route.path != '/register'">
+    <Nav v-if="this.$route.path != '/login'"></Nav>
+  </div>
   <router-view></router-view>
 
 </template>
@@ -13,10 +15,7 @@ export default{
   components:{
     Nav,
   },
+  setup(){
+  }
 }
 </script>
-
-<style>
-
-
-</style>

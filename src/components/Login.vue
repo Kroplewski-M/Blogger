@@ -1,5 +1,5 @@
 <template>
-    <div class="flex w-[270px] mx-auto mt-16 hover:cursor-pointer">
+    <div @click.prevent="this.$router.push('/')" class="flex w-[270px] mx-auto mt-16 hover:cursor-pointer">
         <img src="@/assets/logo.png" alt="" class="w-[70px] h-[70px]">
         <h1 class="font-bold text-[40px] mt-[10px] text-purple-400">Blogger</h1>
     </div>
@@ -19,7 +19,7 @@
             </form>
             <div class="mt-5 mx-auto md:w-[280px] w-[200px] text-center">
                 <p class="text-gray-100">OR</p>
-                <button class="w-[100px] h-[30px] bg-purple-300 rounded-md text-[#222222] font-bold mt-5 hover:bg-purple-400">Register</button>
+                <button @click.prevent="this.$router.push('register')" class="w-[100px] h-[30px] bg-purple-300 rounded-md text-[#222222] font-bold mt-5 hover:bg-purple-400">Register</button>
             </div>
         </div>
     </div>

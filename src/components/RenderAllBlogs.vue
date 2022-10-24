@@ -23,7 +23,7 @@
                     <img src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px]">
                     <p class="text-gray-500 -mt-[1px]">12</p>
                 </div>
-            </div>!
+            </div>
         </div>
     </section>
 </template>

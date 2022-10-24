@@ -45,7 +45,6 @@ import {marked} from 'marked';
                 return marked(content.value);
             });
 
-
             return{
                 title,
                 content,
