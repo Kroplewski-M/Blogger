@@ -1,8 +1,8 @@
 <template>
     <p class="text-center text-[50px] font-bold text-purple-400">View Blogs</p>
-    <section class="max-w-[1000px] h-[100vh] mx-auto mt-16 flex md:space-x-10 flex-wrap">
+    <section class="max-w-[1000px] w-[100vw] min-h-[100vh] mx-auto mt-16 flex md:space-x-10 md:flex-wrap flex-col md:flex-row space-y-10 md:space-y-0 mb-10">
         <div v-for="blog in blogs">
-            <div class="w-[300px] md:w-[350px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer">
+            <div class="w-[300px] md:w-[350px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mx-0">
                 <div class="md:w-[300px] w-[250px] mx-auto">
                     <img src='@/assets/blog-standard.jpg' alt="" class="rounded-md mt-[10px]">
                 </div>
