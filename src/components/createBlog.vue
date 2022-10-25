@@ -6,10 +6,14 @@
         <input type="text" name="title" placeholder="Title" v-model="title"
          class="bg-[#222222] focus:outline-none text-[#EEEEEE] w-[80%] min-h-[50px] pl-[10px] font-bold text-[30px] rounded-md ml-[10px] md:ml-0">
         <hr class="mt-10 border-[1px] border-solid border-[#333333]">
-        <div class="flex pt-[10px] mx-auto h-[55px]">
-            <button @click.prevent="preview = false" class="w-[70px] h-[30px] rounded-lg font-semibold text-purple-300 hover:bg-gray-200 hover:text-[#222222] text-[20px]">Write</button>
-            <button @click.prevent="preview = true" class="w-[90px] h-[30px] rounded-lg font-semibold text-gray-300 hover:bg-gray-200 hover:text-[#222222] text-[20px] ml-5">Preview</button>
-        </div>
+        <div class="flex pt-[10px] mx-auto h-[55px] text-gray-300 relative place-content-center w-[100%]">
+            <button @click.prevent="preview = false" class="w-[70px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 hover:text-[#222222] text-[20px]" :class="(preview == false ? 'text-purple-400' : '')">
+                Write</button>
+            <button @click.prevent="preview = true" class="w-[90px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 hover:text-[#222222] text-[20px] ml-5" :class="(preview == true ? 'text-purple-400' : '')">
+                Preview</button>
+                <button v-if="preview" @click.prevent="preview = true" class="w-[90px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 bg-purple-500 hover:text-[#222222] text-[20px] ml-5 md:ml-0 md:absolute md:right-0">
+                Publish</button>
+            </div>
         <hr class=" border-[1px] border-solid border-[#333333]">
         <div v-if="!preview" class="w-[100%] overflow-hidden">
             <div class="flex md:flex-row  mt-5 text-gray-300 md:space-x-4 space-y-2 md:space-y-0 flex-wrap place-content-center">
@@ -35,11 +39,13 @@
 import {ref, computed } from 'vue';
 import {marked} from 'marked';
 
-    let title = ref('');
-    let content = ref('');
-    let preview = ref(false);
     export default{
         setup(){
+            let title = ref('');
+            let content = ref('');
+            let preview = ref(false);
+            let selected = ref('text-purple-400');
+
 
             const markdown = computed(() => {
                 return marked(content.value);
@@ -49,7 +55,8 @@ import {marked} from 'marked';
                 title,
                 content,
                 markdown,
-                preview
+                preview,
+                selected
             }
     }
 }
