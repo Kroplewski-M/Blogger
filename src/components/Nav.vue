@@ -11,8 +11,13 @@
         <div class="float-right hover:cursor-pointer md:relative md:mr-5 z-50 md:inline w-[50px] mx-auto md:mx-0 mt-[30px] md:mt-0" :class="mobileNav" @click.prevent="accountPopUp = !accountPopUp">
             <img src="@/assets/user.png" alt="" class="w-[50px] h-[50px] rounded-full bg-[#333333] mr-5 mt-[7px]">
         </div>
-        <div class="md:hidden inline absolute right-5 -top-5">
-            <img src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
+        <div class="md:hidden inline absolute right-5 -top-5 z-50" @click.prevent="toggleMobileNav">
+            <div v-if="mobileNav == 'hidden'">
+                <img src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
+            </div>
+            <div v-else>
+                <img src="@/assets/comments.png" alt="" class="w-[30px]">
+            </div>
         </div>
     </nav>
     <div class="absolute w-[300px] h-[200px] bg-[#222222] right-5 top-[60px] rounded-md border-2 border-[#111111] text-center text-purple-400" v-if="accountPopUp">
@@ -39,9 +44,19 @@ export default{
     setup(){
         let accountPopUp = ref(false);
         let mobileNav = ref('hidden');
+
+        function toggleMobileNav(){
+            console.log("here")
+            if(mobileNav.value == "hidden"){
+                mobileNav.value = "";
+            }else{
+                mobileNav.value = "hidden";
+            }
+        }
         return{
             accountPopUp,
             mobileNav,
+            toggleMobileNav
         }
     }
 }
