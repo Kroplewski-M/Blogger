@@ -29,7 +29,7 @@
 
 <script>
 import {ref} from 'vue';
-import {supabase} from '../supabase';
+import {supabase} from '../includes/supabase';
 
 export default{
     setup(){
