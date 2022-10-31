@@ -20,7 +20,7 @@
             </div>
         </div>
     </nav>
-    <div v-if="this.$route.path == '/'" class="w-[300px] mx-auto align-center" :class="(mobileNav == 'hidden'? '' : 'hidden')">
+    <div v-if="this.$route.path == '/'" class="w-[300px] mx-auto align-center md:hidden" :class="(mobileNav == 'hidden'? '' : 'hidden')">
         <input type="text" name="" id="" placeholder="Search for Blogs" class="w-[300px] h-[30px] rounded-md bg-[#333333] font-semibold pl-[5px] md:mr-10 mt-5 text-gray-200" >
         <div class="w-[100px] mx-auto">
             <button class="w-[100px] h-[30px] bg-gray-200 rounded-md text-[#222222] font-bold mt-5">Find Blog</button>

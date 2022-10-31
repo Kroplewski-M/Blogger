@@ -26,3 +26,24 @@
         </div>
     </div>
 </template>
+
+<script>
+import {ref} from 'vue';
+import {supabase} from '../supabase';
+
+export default{
+    setup(){
+        let loading = ref(false);
+        let email = ref('');
+        let name = ref('');
+        let password = ref('');
+
+
+        return{
+
+        }
+    }
+}
+
+
+</script>
