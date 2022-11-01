@@ -3,6 +3,15 @@
         <img src="@/assets/logo.png" alt="" class="w-[70px] h-[70px]">
         <h1 class="font-bold text-[40px] mt-[10px] text-purple-400">Blogger</h1>
     </div>
+    <div v-if="accountCreated" class="w-[100vw] h-[70px] absolute mt-10 text-center">
+            <p class="text-green-500 font-bold">Account Created!.... Redirecting</p>
+    </div>
+    <div v-if="creatingAccount" class="w-[100vw] h-[70px] absolute mt-10">
+        <div class="flex place-content-center">
+            <p class="text-gray-300 font-bold">Creating Account....</p>
+            <img src="@/assets/hammer.png" alt="" class="w-[40px] h-[40px] ml-5 mt-[5px]">
+        </div>
+    </div>
     <div class="w-[300px] md:w-[500px] h-[500px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
         <h1 class="text-purple-400 font-bold text-center text-[40px] mt-[5px]">Register</h1>
         <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
@@ -20,7 +29,7 @@
                 <ErrorMessage name="password"  class="text-red-500 w-[100%] block text-[13px] absolute  ml-[100px]"/>
 
                 <div class="w-[110px] mx-auto mt-[50px]">
-                    <button class="w-[100%] h-[35px] bg-gray-100 rounded-md text-[#222222] font-bold hover:bg-gray-300">Register</button>
+                    <button class="w-[100%] h-[35px] bg-gray-100 rounded-md text-[#222222] font-bold hover:bg-gray-300" :disabled="loading">Register</button>
                 </div>
             </vee-form>
             <div class="mt-5 mx-auto md:w-[280px] w-[200px] text-center">
@@ -38,18 +47,37 @@ import {supabase} from '../includes/supabase';
 export default{
     setup(){
         let loading = ref(false);
+        let accountCreated = ref(false);
+        let creatingAccount = ref(false);
         let schema= ref({
             name: "required|alpha_spaces",
             email: "required|email",
             password: "required|min:6",
         });
-        function registerAccount(values){
-            console.log(values);
+        async function registerAccount(values){
+            loading.value = true;
+            creatingAccount.value = true;
+            try{
+                const {data, error} = await supabase.auth.signUp({
+                    email: values.email,
+                    password: values.password,
+                })
+                if(error){ throw error;}
+                else{accountCreated.value = true;}
+            }catch(error){
+                alert(error);
+            }finally{
+                loading.value = false;
+                creatingAccount.value = false;
+            }
         }
 
         return{
             schema,
-            registerAccount
+            loading,
+            registerAccount,
+            accountCreated,
+            creatingAccount
         }
     }
 }
