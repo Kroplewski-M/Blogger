@@ -49,11 +49,26 @@ export default{
         let loading = ref(false);
         let accountCreated = ref(false);
         let creatingAccount = ref(false);
+        let id = ref('');
         let schema= ref({
             name: "required|alpha_spaces",
             email: "required|email",
             password: "required|min:6",
         });
+
+        async function addUserToTable(name,email){
+            try{
+                const {data,error} = await supabase.from('Users').insert({id: id.value, Name: name, Email: email});
+                if(error){throw error;}
+                else{accountCreated.value = true;}
+            }catch(error){
+                console.log(error);
+            }finally{
+                loading.value = false;
+                creatingAccount.value = false;
+            }
+        };
+
         async function registerAccount(values){
             loading.value = true;
             creatingAccount.value = true;
@@ -62,15 +77,15 @@ export default{
                     email: values.email,
                     password: values.password,
                 })
-                if(error){ throw error;}
-                else{accountCreated.value = true;}
+                if(error){ JSON.stringify(error);}
+                else{id.value = data.user.id;}
             }catch(error){
                 alert(error);
             }finally{
-                loading.value = false;
-                creatingAccount.value = false;
+                addUserToTable(values.name,values.email);
+                
             }
-        }
+        };
 
         return{
             schema,
@@ -81,6 +96,5 @@ export default{
         }
     }
 }
-
 
 </script>
