@@ -17,15 +17,15 @@
         <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
             <vee-form action="" class="md:text-[20px] text-[15px]" :validation-schema="schema" @submit="registerAccount">
                 <label for="name" class="ml-[35px]">Name:</label>
-                <vee-field type="text" name="name" placeholder="John Doe" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[7px] mb-[30px] text-purple-500" />
+                <vee-field type="text" name="name" placeholder="John Doe" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[7px] mb-[30px] text-gray-100" />
                 <ErrorMessage name="name"  class="text-red-500 block text-[13px] -mt-[30px]  ml-[100px] absolute"/>
 
                 <label for="email" class="ml-[35px]">Email:</label>
-                <vee-field type="email" name="email" placeholder="example@mail.com" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[10px] mb-[30px] text-purple-500" />
+                <vee-field type="email" name="email" placeholder="example@mail.com" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[10px] mb-[30px] text-gray-100" />
                 <ErrorMessage name="email"  class="text-red-500 w-[100%] block text-[13px] absolute -mt-[30px]  ml-[100px]"/>
 
                 <label for="password">Password:</label>
-                <vee-field type="password" name="password" placeholder="password" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] md:ml-[10px] ml-[17px] text-purple-500" />
+                <vee-field type="password" name="password" placeholder="password" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] md:ml-[10px] ml-[17px] text-gray-100" />
                 <ErrorMessage name="password"  class="text-red-500 w-[100%] block text-[13px] absolute  ml-[100px]"/>
 
                 <div class="w-[110px] mx-auto mt-[50px]">
@@ -60,7 +60,10 @@ export default{
             try{
                 const {data,error} = await supabase.from('Users').insert({id: id.value, Name: name, Email: email});
                 if(error){throw error;}
-                else{accountCreated.value = true;}
+                else{
+                    accountCreated.value = true;
+                    setTimeout(function(){redirect()},2000)
+                }
             }catch(error){
                 console.log(error);
             }finally{
@@ -69,7 +72,7 @@ export default{
             }
         };
 
-        async function registerAccount(values){
+        async function registerAccount(values,{resetForm}){
             loading.value = true;
             creatingAccount.value = true;
             try{
@@ -83,16 +86,18 @@ export default{
                 alert(error);
             }finally{
                 addUserToTable(values.name,values.email);
-                
+                resetForm();
             }
         };
-
+        const redirect = () =>{
+            window.location.href = '/';
+        }
         return{
             schema,
             loading,
             registerAccount,
             accountCreated,
-            creatingAccount
+            creatingAccount,
         }
     }
 }
