@@ -10,7 +10,7 @@
 import Nav from './components/Nav.vue';
 import {useProfileStore} from './stores/profile';
 import {supabase} from './includes/supabase';
-import Profile from './components/Profile.vue';
+
 
 export default{
   components:{
@@ -20,12 +20,12 @@ export default{
     const profileStore = useProfileStore();
 
 
+    //SIGN USER IN IF LOGGED IN ON PREV SESSION
     function getToken(){
       let token = localStorage.getItem('sb-rbvjgzheadvqlgviwvuv-auth-token');
       if(token != null){
         let user = JSON.parse(token);
         let id = user.user.id;
-        console.log(user);
         getUser(id);
       }
     }
@@ -47,14 +47,9 @@ export default{
       }
     }
 
-    // async function signOut(){
-    //   const { error } = await supabase.auth.signOut();
-    // }
-    // //signOut();
-
     async function signIn(){
       try{
-        const {data, error} = await supabase.auth.signInWithPassword({email: 'dyson@gmail.com', password: 'jack123'});
+        const {data, error} = await supabase.auth.signInWithPassword({email: 'kroplewskimateusz@gmail.com', password: 'bramkarz555'});
         if(error) throw error;
       }catch(error){
         console.log(error);
@@ -63,6 +58,6 @@ export default{
     }
     signIn();
     
-  }
+   }
 }
 </script>
