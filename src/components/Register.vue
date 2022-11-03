@@ -12,10 +12,14 @@
             <img src="@/assets/hammer.png" alt="" class="w-[40px] h-[40px] ml-5 mt-[5px]">
         </div>
     </div>
-    <div class="w-[300px] md:w-[500px] h-[500px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
+    <div class="w-[300px] md:w-[500px] h-[600px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
         <h1 class="text-purple-400 font-bold text-center text-[40px] mt-[5px]">Register</h1>
         <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
             <vee-form action="" class="md:text-[20px] text-[15px]" :validation-schema="schema" @submit="registerAccount">
+                <label for="avatar" class="ml-5">Avatar:</label>
+                <vee-field type="file" name="avatar" id="avatar" class="text-[16px] mb-[30px] max-w-[250px] ml-5"/>
+                <ErrorMessage name="avatar"  class="text-red-500 block text-[13px] -mt-[30px]  ml-[100px] absolute"/>
+
                 <label for="name" class="ml-[35px]">Name:</label>
                 <vee-field type="text" name="name" placeholder="John Doe" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[7px] mb-[30px] text-gray-100" />
                 <ErrorMessage name="name"  class="text-red-500 block text-[13px] -mt-[30px]  ml-[100px] absolute"/>
@@ -54,14 +58,15 @@ export default{
             name: "required|alpha_spaces",
             email: "required|email",
             password: "required|min:6",
+            avatar: "required",
         });
-
-        async function addUserToTable(name,email){
+        async function uploadAvatar(email,avatar){
+            //ADD AVATAR TO BUCKET
             try{
-                const {data,error} = await supabase.from('Users').insert({id: id.value, Name: name, Email: email});
-                if(error){throw error;}
+                const { data, error } = await supabase.storage.from('avatars').upload(`${email}/${email}.png`, avatar, {cacheControl: '3600',upsert: true});
+                if(error) throw error;
                 else{
-                    accountCreated.value = true;
+                    console.log("image uploaded");
                     setTimeout(function(){redirect()},2000)
                 }
             }catch(error){
@@ -69,6 +74,23 @@ export default{
             }finally{
                 loading.value = false;
                 creatingAccount.value = false;
+            }
+
+        }
+
+        async function addUserToTable(id,name,email,avatar){
+            try{
+                let avatarUrl = `https://rbvjgzheadvqlgviwvuv.supabase.co/storage/v1/object/public/avatars/${email}/${email}.png`;
+                const {data,error} = await supabase.from('Users').insert({id:id, Name: name, Email: email, AvatarUrl: avatarUrl});
+                if(error){throw error;}
+                else{
+                    console.log("Profile added to table");
+                    accountCreated.value = true;
+                }
+            }catch(error){
+                console.log(error);
+            }finally{
+                uploadAvatar(email,avatar);
             }
         };
 
@@ -81,11 +103,14 @@ export default{
                     password: values.password,
                 })
                 if(error){ JSON.stringify(error);}
-                else{id.value = data.user.id;}
+                else{
+                    id.value = data.user.id;
+                    console.log("Auth added");
+                }
             }catch(error){
                 alert(error);
             }finally{
-                addUserToTable(values.name,values.email);
+                addUserToTable(id.value,values.name,values.email,values.avatar);
                 resetForm();
             }
         };

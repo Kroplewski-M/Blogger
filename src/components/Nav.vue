@@ -9,11 +9,12 @@
             <a href="#" @click.prevent="this.$router.push('create-blog')" class="font-bold text-purple-400 no-underline" :class="(mobileNav == 'hidden'? '' : 'text-[30px]')">Write Blog</a>
         </div>
         <div class="float-right hover:cursor-pointer md:relative md:mr-5 z-50 md:inline mx-auto md:mx-0 md:mt-0" :class="(mobileNav == 'hidden'? 'mt-[15px] hidden' : ' pt-[70px] w-[70px] md:w-[55px]')" @click.prevent="accountPopUp = !accountPopUp">
-            <img src="@/assets/user.png" alt="" class="w-[70px] h-[70px] md:h-[55px] md:w-[55px] rounded-full bg-[#333333] mr-5 mt-[7px]">
+            <img v-if="profileStore.user.id == undefined" src="@/assets/user.png" alt="" class="w-[70px] h-[70px] md:h-[55px] md:w-[55px] rounded-full bg-[#333333] mr-5 mt-[7px]">
+            <img v-else :src="profileStore.user.avatarUrl" alt="" class="w-[70px] h-[70px] md:h-[55px] md:w-[55px] rounded-full bg-[#333333] mr-5 mt-[7px] ">
         </div>
         <div class="md:hidden inline absolute right-5 -top-5 z-50" @click.prevent="toggleMobileNav">
             <div v-if="mobileNav == 'hidden'">
-                <img src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
+                <img  src="@/assets/mobileMenu.png" alt="" class="w-[30px]">
             </div>
             <div v-else>
                 <img src="@/assets/close.png" alt="" class="w-[30px]">
@@ -29,14 +30,20 @@
 
     <div class="absolute w-[300px] h-[200px] bg-[#222222] right-5  rounded-md border-2 border-[#111111] text-center text-purple-400 z-50" v-if="accountPopUp" :class="(mobileNav == 'hidden'? 'top-[60px]' : 'top-[435px]')">
             <!-- USER IS NOT LOGGED IN -->
-            <div>
+            <div v-if="profileStore.user.id == undefined">
                 <p class="font-semibold">You are not logged in!</p>
                 <button @click.prevent="this.$router.push('login'), accountPopUp = false" class="bg-[#111111] w-[130px] h-[30px] rounded-sm text-gray-300 font-bold">Login Now!</button>
                 <p>Or</p>
                 <button @click.prevent="this.$router.push('register'), accountPopUp = false" class="bg-[#111111] w-[180px] h-[40px] rounded-sm text-gray-300 font-bold">Register an account!</button>
             </div>
             <!-- USER IS LOGGED IN -->
+            <div v-else>
+                <img src="@/assets/close.png" class="w-[20px] float-right mr-[10px] mt-[10px] hover:cursor-pointer" alt=""  @click.prevent="accountPopUp = !accountPopUp">
+                <p class="mt-[30px]">Hello,</p>
+                <p class="font-bold text-[20px] -mt-5">{{profileStore.user.name}}</p>
+                <button class="bg-gray-200 px-5 py-[10px] rounded-md text-[#222222] font-bold"  @click.prevent="this.$router.push('profile'), accountPopUp = false">Account settings</button>
 
+            </div>
     </div>
     <!-- MOBILE NAV -->
     <section class="w-[100vw] h-[100vh] bg-[#111111] fixed top-0 z-10" :class="mobileNav">
@@ -45,10 +52,12 @@
 </template>
 
 <script>
+import {useProfileStore} from '../stores/profile';
 import {ref} from 'vue'
 
 export default{
     setup(){
+        const profileStore = useProfileStore();
         let accountPopUp = ref(false);
         let mobileNav = ref('hidden');
 
@@ -66,7 +75,8 @@ export default{
         return{
             accountPopUp,
             mobileNav,
-            toggleMobileNav
+            toggleMobileNav,
+            profileStore
         }
     }
 }
