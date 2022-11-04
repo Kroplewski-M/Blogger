@@ -3,7 +3,7 @@
         <img src="@/assets/logo.png" alt="" class="w-[70px] h-[70px]">
         <h1 class="font-bold text-[40px] mt-[10px] text-purple-400">Blogger</h1>
     </div>
-    <div class="w-[300px] md:w-[500px] h-[450px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
+    <div class="w-[100%] md:w-[500px] h-[450px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
         <div v-if="loggingIn" class="w-[300px] mx-auto">
             <div class="absolute w-[300px] h-[30px] rounded-md bg-green-500 -mt-[20px]">
                 <p class="text-center text-[16px] font-bold my-0 mt-[3px] text-[#222222]">Logging In...</p>
@@ -11,14 +11,14 @@
         </div>
 
         <h1 class="text-purple-400 font-bold text-center text-[40px] mt-[5px]">Login</h1>
-        <div class="w-[250px] md:w-[370px] mx-auto mt-[55px]">
+        <div class="w-[350px] md:w-[250px] md:w-[370px] mx-auto mt-[55px]">
             <vee-form action="" class="md:text-[20px] text-[15px]" :validation-schema="schema" @submit="login">
                 <label for="email" class="ml-[35px]">Email:</label>
-                <vee-field type="email" name="email" placeholder="example@mail.com" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[10px] mb-[30px]" />
+                <vee-field type="email" name="email" placeholder="example@mail.com" class="text-gray-100 w-[250px] h-[40px] md:h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[10px] mb-[30px]" />
                 <ErrorMessage name="email"  class="text-red-500 w-[100%] block text-[13px] absolute -mt-[30px]  ml-[100px]"/>
 
                 <label for="password">Password:</label>
-                <vee-field  type="password" name="password" placeholder="password" class="w-[150px] md:w-[250px] h-[30px] rounded-sm bg-[#333333] pl-[5px] md:ml-[10px] ml-[17px]" />
+                <vee-field  type="password" name="password" placeholder="password" class="text-gray-100 w-[250px] h-[40px] md:h-[30px] rounded-sm bg-[#333333] pl-[5px] md:ml-[10px] ml-[17px]" />
                 <ErrorMessage name="password"  class="text-red-500 w-[100%] block text-[13px] absolute   ml-[100px]"/>
 
                 <div class="w-[110px] mx-auto mt-[50px]">

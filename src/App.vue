@@ -22,11 +22,13 @@ export default{
 
     //SIGN USER IN IF LOGGED IN ON PREV SESSION
     function getToken(){
-      let token = localStorage.getItem('sb-rbvjgzheadvqlgviwvuv-auth-token');
-      if(token != null){
-        let user = JSON.parse(token);
-        let id = user.user.id;
-        getUser(id);
+      if(profileStore.user.id == undefined){
+        let token = localStorage.getItem('sb-rbvjgzheadvqlgviwvuv-auth-token');
+        if(token != null){
+          let user = JSON.parse(token);
+          let id = user.user.id;
+          getUser(id);
+        }
       }
     }
     getToken();
@@ -46,7 +48,7 @@ export default{
         console.log(error);
       }
     }
-    
+
    }
 }
 </script>

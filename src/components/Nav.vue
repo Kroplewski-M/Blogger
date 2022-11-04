@@ -31,6 +31,7 @@
     <div class="absolute w-[300px] h-[200px] bg-[#222222] right-5  rounded-md border-2 border-[#111111] text-center text-purple-400 z-50" v-if="accountPopUp" :class="(mobileNav == 'hidden'? 'top-[60px]' : 'top-[435px]')">
             <!-- USER IS NOT LOGGED IN -->
             <div v-if="profileStore.user.id == undefined">
+                <img src="@/assets/close.png" class="w-[20px] float-right mr-[10px] mt-[10px] hover:cursor-pointer" alt=""  @click.prevent="accountPopUp = !accountPopUp">
                 <p class="font-semibold">You are not logged in!</p>
                 <button @click.prevent="this.$router.push('login'), accountPopUp = false" class="bg-[#111111] w-[130px] h-[30px] rounded-sm text-gray-300 font-bold">Login Now!</button>
                 <p>Or</p>
@@ -60,7 +61,7 @@ export default{
         const profileStore = useProfileStore();
         let accountPopUp = ref(false);
         let mobileNav = ref('hidden');
-
+        let windowWidth = ref(window.innerWidth);
         function toggleMobileNav(){
             console.log("here")
             if(mobileNav.value == "hidden"){
@@ -72,6 +73,14 @@ export default{
                 accountPopUp.value = false;
             }
         }
+        window.addEventListener('resize', () =>{
+            windowWidth.value = window.innerWidth;
+            if(windowWidth.value > 768){
+                if(mobileNav.value != 'hidden'){
+                    mobileNav.value = 'hidden';
+                }
+            }
+        });
         return{
             accountPopUp,
             mobileNav,
