@@ -6,7 +6,7 @@
     <div class="w-[300px] md:w-[500px] h-[450px] rounded-md bg-[#222222] mx-auto mt-[100px] text-purple-300 font-semibold">
         <div v-if="loggingIn" class="w-[300px] mx-auto">
             <div class="absolute w-[300px] h-[30px] rounded-md bg-green-500 -mt-[20px]">
-                <p class="text-center text-[16px] font-bold my-0 mt-[3px] text-[#222222]">Logging Out...</p>
+                <p class="text-center text-[16px] font-bold my-0 mt-[3px] text-[#222222]">Logging In...</p>
             </div>
         </div>
 
@@ -31,6 +31,9 @@
             </div>
         </div>
     </div>
+    <div v-if="showError" class="w-[300px] h-[30px] bg-red-700 mx-auto rounded-md mt-5">
+        <p class="my-0 font-bold text-center">Error Logging In</p>
+    </div>
 </template>
 
 <script>
@@ -41,6 +44,8 @@ export default{
     setup(){
         let loading = ref(false);
         let loggingIn = ref(false);
+        let showError = ref(false);
+
         let schema= ref({
             email: "required",
             password: "required",
@@ -48,15 +53,20 @@ export default{
 
         async function login(values){
             try{
+                showError.value=false;
                 loggingIn.value = true;
                 loading.value = true;
                 const {data, error} = await supabase.auth.signInWithPassword({email: values.email, password: values.password});
                 if(error) throw error;
+                else {
+                    showError.value=false;
+                    loading.value = false;
+                    window.location.href = '/';
+                }
             }catch(error){
-                console.log(error);
-            }finally{
+                loggingIn.value = false;
+                showError.value=true;
                 loading.value = false;
-                window.location.href = '/';
             }
         }
 
@@ -64,7 +74,8 @@ export default{
             schema,
             loading,
             login,
-            loggingIn
+            loggingIn,
+            showError
         }
     }
 }
