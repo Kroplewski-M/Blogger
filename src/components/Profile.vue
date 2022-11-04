@@ -1,8 +1,13 @@
 <template>
     <section class="md:w-[50vw] w-[90vw] min-h-[80vh] bg-[#222222] mx-auto mt-10 rounded-lg">
+        <div v-if="loggingOut" class="w-[300px] mx-auto">
+            <div class="absolute w-[300px] h-[30px] rounded-md bg-green-500 -mt-[20px]">
+                <p class="text-center text-[16px] font-bold my-0 mt-[3px]">Logging Out...</p>
+            </div>
+        </div>
         <div class="max-w-[500px] mx-auto pt-10">
             <div class="w-[100px] mx-auto">
-                <img :src="profileStore.user.avatarUrl" alt="" class="w-[100px]  bg-gray-300 rounded-full">
+                <img :src="profileStore.user.avatarUrl" alt="" class="w-[100px] h-[100px]  bg-gray-300 rounded-full">
             </div>
             <p class="text-gray-400 font-semibold mt-5 text-center">Account created: <span class="font-bold text-gray-300"> {{profileStore.user.createdAt}} </span></p>
             <div class="border-solid border-2 border-gray-100 mt-10 rounded-md pl-5 text-[20px]">
@@ -42,13 +47,13 @@ export default{
     setup(){
         const profileStore = useProfileStore();
         let updateForm = ref(false);
-
+        let loggingOut = ref(false);
         async function logOut(){
             try{
+                loggingOut.value = true;
                 const { error } = await supabase.auth.signOut();
                 if(error) throw error;
                 else{
-                    alert("You have logged Out!");
                     setTimeout(function(){window.location.href = '/';},1000)
                 }
             }catch{
@@ -60,6 +65,7 @@ export default{
             profileStore,
             updateForm,
             logOut,
+            loggingOut
         }
     }
 }

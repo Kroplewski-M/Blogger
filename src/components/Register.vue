@@ -74,6 +74,7 @@ export default{
             }finally{
                 loading.value = false;
                 creatingAccount.value = false;
+                accountCreated.value = true;
             }
 
         }
@@ -85,7 +86,6 @@ export default{
                 if(error){throw error;}
                 else{
                     console.log("Profile added to table");
-                    accountCreated.value = true;
                 }
             }catch(error){
                 console.log(error);

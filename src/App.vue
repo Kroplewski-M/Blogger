@@ -46,17 +46,6 @@ export default{
         console.log(error);
       }
     }
-
-    async function signIn(){
-      try{
-        const {data, error} = await supabase.auth.signInWithPassword({email: 'kroplewskimateusz@gmail.com', password: 'bramkarz555'});
-        if(error) throw error;
-      }catch(error){
-        console.log(error);
-      }
-    
-    }
-    signIn();
     
    }
 }
