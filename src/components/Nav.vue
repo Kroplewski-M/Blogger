@@ -42,7 +42,7 @@
                 <img src="@/assets/close.png" class="w-[20px] float-right mr-[10px] mt-[10px] hover:cursor-pointer" alt=""  @click.prevent="accountPopUp = !accountPopUp">
                 <p class="mt-[30px]">Hello,</p>
                 <p class="font-bold text-[20px] -mt-5">{{profileStore.user.name}}</p>
-                <button class="bg-gray-200 px-5 py-[10px] rounded-md text-[#222222] font-bold"  @click.prevent="this.$router.push('profile'), accountPopUp = false">Account settings</button>
+                <button class="bg-gray-200 px-5 py-[10px] rounded-md text-[#222222] font-bold"  @click.prevent="profile">Account settings</button>
 
             </div>
     </div>
@@ -81,11 +81,17 @@ export default{
                 }
             }
         });
+        function profile(){
+            accountPopUp.value = false;
+            if(mobileNav.value != 'hidden') mobileNav.value = 'hidden';
+            window.location.href = '/profile';
+        }
         return{
             accountPopUp,
             mobileNav,
             toggleMobileNav,
-            profileStore
+            profileStore,
+            profile
         }
     }
 }
