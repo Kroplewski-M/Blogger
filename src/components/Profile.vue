@@ -92,10 +92,15 @@ export default{
                 passwordResetText.value = 'Error occured! Please try again shortly...';
             }
         }
-
+        watch(sentPasswordLink, ()=>{
+            setTimeout(() => {
+                if(sentPasswordLink.value == true){
+                    sentPasswordLink.value = false;
+                }
+            }, "5000")
+        });
         let profileEmail = ref(profileStore.user.email);
         let profileName = ref(profileStore.user.name);
-
 
         return{
             profileStore,
