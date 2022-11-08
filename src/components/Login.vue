@@ -12,7 +12,7 @@
 
         <h1 class="text-purple-400 font-bold text-center text-[40px] mt-[5px]">Login</h1>
         <div class="w-[350px] md:w-[250px] md:w-[370px] mx-auto mt-[55px]">
-            <vee-form action="" class="md:text-[20px] text-[15px]" :validation-schema="schema" @submit="login">
+            <vee-form class="md:text-[20px] text-[15px]" :validation-schema="schema" @submit="login">
                 <label for="email" class="ml-[35px]">Email:</label>
                 <vee-field type="email" name="email" placeholder="example@mail.com" class="text-gray-100 w-[250px] h-[40px] md:h-[30px] rounded-sm bg-[#333333] pl-[5px] ml-[10px] mb-[30px]" />
                 <ErrorMessage name="email"  class="text-red-500 w-[100%] block text-[13px] absolute -mt-[30px]  ml-[100px]"/>
@@ -75,7 +75,7 @@ export default{
             loading,
             login,
             loggingIn,
-            showError
+            showError,
         }
     }
 }
