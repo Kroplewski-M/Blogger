@@ -22,7 +22,7 @@
                 Write</button>
             <button @click.prevent="preview = true" class="w-[90px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 hover:text-[#222222] text-[20px] ml-5" :class="(preview == true ? 'text-purple-400' : '')">
                 Preview</button>
-                <button v-if="preview" @click.prevent="preview = true" class="w-[90px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 bg-purple-500 hover:text-[#222222] text-[20px] ml-5 md:ml-0 md:absolute md:right-0">
+                <button v-if="preview" value="submit" class="w-[90px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 bg-purple-500 hover:text-[#222222] text-[20px] ml-5 md:ml-0 md:absolute md:right-0">
                 Publish</button>
             </div>
         <hr class=" border-[1px] border-solid border-[#333333]">
@@ -35,9 +35,9 @@
                 <p class="p-0 m-0 bg-[#222222] px-2 rounded-lg w-[100px] mr-[10px] md:w-[auto]">- example : unordered list</p>
                 <p class="p-0 m-0 bg-[#222222] px-2 rounded-lg w-[100px] mr-[10px] md:w-[auto]">1. : ordered list</p>
             </div>
-            <vee-field as="textarea" type="textarea" name="content" placeholder="Your story starts here..." v-model="content"
-            class="bg-[#222222] rounded-lg mt-10 h-[300px] md:w-[1000px] min-w-[350px] focus:outline-none text-gray-200 pl-[10px] pt-[10px] font-semibold" />
         </div>
+        <vee-field v-show="!preview" as="textarea" type="textarea" name="content" placeholder="Your story starts here..." v-model="content"
+        class="bg-[#222222] rounded-lg mt-10 h-[300px] md:w-[1000px] min-w-[350px] focus:outline-none text-gray-200 pl-[10px] pt-[10px] font-semibold" />
 
         <div class="w-[100%] h-[30px] text-left mt-[5px]">
         <ErrorMessage name="content" class="text-red-500"/>
@@ -71,8 +71,6 @@ import {supabase} from '../includes/supabase';
             // }
             // getBlogs();
 
-
-
             let title = ref('');
             let content = ref('');
             let preview = ref(false);
@@ -88,13 +86,17 @@ import {supabase} from '../includes/supabase';
                 return marked(content.value);
             });
 
+            function publishBlog(values){
+                console.log(values);
+            }
             return{
                 title,
                 content,
                 markdown,
                 preview,
                 selected,
-                schema
+                schema,
+                publishBlog
             }
     }
 }
