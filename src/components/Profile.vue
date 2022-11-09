@@ -39,9 +39,7 @@ export default{
     setup(){  
         const profileStore = useProfileStore();
 
-        let updateForm = ref(false);
         let loggingOut = ref(false);
-        let formBtnText = ref('Update Info');
         async function logOut(){
             try{
                 loggingOut.value = true;
@@ -58,7 +56,6 @@ export default{
         
         return{
             profileStore,
-            updateForm,
             logOut,
             loggingOut,
         }

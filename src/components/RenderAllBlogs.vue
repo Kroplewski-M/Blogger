@@ -33,7 +33,6 @@ import {ref} from 'vue';
 
     export default{
         setup(){
-
             let blogs = ref({
             0:{title: "Begginer JS", 
             date: "Sun Jun 14 2020",
