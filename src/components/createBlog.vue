@@ -1,29 +1,29 @@
 
 <template>
-    <!-- Edit blog -->
-    <div class="w-[100%] h-[100%] absolute z-50 backdrop-blur-sm hidden">
+    <div v-if="blogUploading" class="w-[100%] h-[100%] absolute z-50 backdrop-blur-sm ">
         <div class="md:w-[600px] h-[400px] bg-[#222222] rounded-md mx-auto mt-[30vh]">
-            <div>
+            <div v-if="blogUploadState == 'uploading'">
                 <h1 class="text-gray-200 text-center mt-16">Your Blog is being uploaded</h1>
                 <h1 class="text-gray-400 text-center pt-5">Please wait...</h1>
                 <img src="@/assets/hammer.png" alt="" class="w-[70px] mx-auto">
             </div>
-            <div class="hidden">
+            <div v-if="blogUploadState == 'success'">
                 <h1 class="text-green-700 text-center mt-16">Success!!</h1>
                 <h1 class="text-gray-400 text-center pt-5">Your blog has been uploaded!</h1>
                 <div class="w-[120px] mx-auto mt-10">
-                    <button class="w-[120px] h-[25px] rounded-md bg-green-500 font-bold">Return home</button>
+                    <button class="w-[120px] h-[25px] rounded-md bg-green-500 font-bold" @click.prevent="this.$router.push('/')">Return home</button>
                 </div>
             </div>
-            <div class="hidden">
+            <div v-if="blogUploadState == 'error'">
                 <h1 class="text-red-700 text-center mt-16">An Error Occured!!</h1>
                 <h1 class="text-gray-400 text-center pt-5">Your blog has not been uploaded!</h1>
                 <div class="w-[120px] mx-auto mt-10">
-                    <button class="w-[120px] h-[25px] rounded-md bg-red-500 font-bold">try again</button>
+                    <button class="w-[120px] h-[25px] rounded-md bg-red-500 font-bold" @click.prevent="blogUploading = false">try again</button>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Edit blog -->
     <div class="max-w-[1000px] mx-auto mt-16 text-center flex flex-col relative">
         <vee-form :validation-schema="schema" @submit="publishBlog">
         <p class="inline text-gray-200 font-bold text-[20px] mr-5">Blog Image:</p>
@@ -90,19 +90,9 @@ import {useProfileStore} from '../stores/profile';
     export default{
         setup(){
             const profileStore = useProfileStore();
+            let blogUploading = ref(false);
+            let blogUploadState = ref('uploading');
 
-            // async function getBlogs(){
-            //     try{
-            //         const { data: blogs, error } = await supabase.from('Blogs').select('id, author, title, content, imageUrl, likeCount, created_at');
-            //         if(error) throw error;
-            //         else{
-            //             console.log(blogs[0]);
-            //         }
-            //     }catch(error){
-            //         console.log(error);
-            //     }
-            // }
-            // getBlogs();
 
             let title = ref('');
             let content = ref('');
@@ -121,8 +111,10 @@ import {useProfileStore} from '../stores/profile';
             });
 
             async function publishBlog(values){
-                console.log(values);
+                blogUploading.value = true;
+                blogUploadState.value = 'uploading';
                 let imgUrl = `https://rbvjgzheadvqlgviwvuv.supabase.co/storage/v1/object/public/blog-imgs/${profileStore.user.name}-${values.title}.png`;
+
                 try{
                     const {data,error} = await supabase.from('Blogs')
                     .insert({title:values.title, authorID: profileStore.user.id, authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl});
@@ -130,6 +122,7 @@ import {useProfileStore} from '../stores/profile';
                     else{ console.log('added to table');}
                 }catch(error){
                     console.log(error);
+                    blogUploadState.value = "error";
                 }
 
                 uploadBlogImg(profileStore.user.name,values.title,values.image);
@@ -142,9 +135,11 @@ import {useProfileStore} from '../stores/profile';
                     if(error) throw error;
                     else{
                         console.log("image uploaded");
+                    blogUploadState.value = "success";
                     }
                 }catch(error){
                     console.log(error);
+                    blogUploadState.value = "error";
                 }
             }
            
@@ -156,7 +151,9 @@ import {useProfileStore} from '../stores/profile';
                 preview,
                 selected,
                 schema,
-                publishBlog
+                publishBlog,
+                blogUploading,
+                blogUploadState
             }
     }
 }
