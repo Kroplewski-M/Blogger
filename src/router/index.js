@@ -11,7 +11,18 @@ const router = createRouter({
     { path: "/", component: RenderAllBlogs },
     { path: "/login", component: Login },
     { path: "/register", component: Register },
-    { path: "/create-blog", component: createBlog },
+    {
+      path: "/create-blog",
+      component: createBlog,
+      beforeEnter: (to, from, next) => {
+        let token = localStorage.getItem("sb-rbvjgzheadvqlgviwvuv-auth-token");
+        if (token == null) {
+          next({ path: "/login" });
+        } else {
+          next();
+        }
+      },
+    },
     {
       path: "/profile",
       component: Profile,
