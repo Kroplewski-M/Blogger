@@ -1,6 +1,29 @@
 
 <template>
     <!-- Edit blog -->
+    <div class="w-[100%] h-[100%] absolute z-50 backdrop-blur-sm hidden">
+        <div class="md:w-[600px] h-[400px] bg-[#222222] rounded-md mx-auto mt-[30vh]">
+            <div>
+                <h1 class="text-gray-200 text-center mt-16">Your Blog is being uploaded</h1>
+                <h1 class="text-gray-400 text-center pt-5">Please wait...</h1>
+                <img src="@/assets/hammer.png" alt="" class="w-[70px] mx-auto">
+            </div>
+            <div class="hidden">
+                <h1 class="text-green-700 text-center mt-16">Success!!</h1>
+                <h1 class="text-gray-400 text-center pt-5">Your blog has been uploaded!</h1>
+                <div class="w-[120px] mx-auto mt-10">
+                    <button class="w-[120px] h-[25px] rounded-md bg-green-500 font-bold">Return home</button>
+                </div>
+            </div>
+            <div class="hidden">
+                <h1 class="text-red-700 text-center mt-16">An Error Occured!!</h1>
+                <h1 class="text-gray-400 text-center pt-5">Your blog has not been uploaded!</h1>
+                <div class="w-[120px] mx-auto mt-10">
+                    <button class="w-[120px] h-[25px] rounded-md bg-red-500 font-bold">try again</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="max-w-[1000px] mx-auto mt-16 text-center flex flex-col relative">
         <vee-form :validation-schema="schema" @submit="publishBlog">
         <p class="inline text-gray-200 font-bold text-[20px] mr-5">Blog Image:</p>
@@ -16,6 +39,14 @@
          <div class="absolute w-[100%] h-[30px] text-left mt-[5px]">
             <ErrorMessage name="title" class="text-red-500"/>
         </div>
+
+        <vee-field type="text" name="heading" placeholder="heading"
+         class="bg-[#222222] focus:outline-none text-[#EEEEEE] w-[60%] min-h-[40px] pl-[10px] font-semibold text-[20px] rounded-md ml-[10px] md:ml-0 block mt-10" />
+
+         <div class="absolute w-[100%] h-[30px] text-left mt-[5px]">
+            <ErrorMessage name="heading" class="text-red-500"/>
+        </div>
+
         <hr class="mt-10 border-[1px] border-solid border-[#333333]">
         <div class="flex pt-[10px] mx-auto h-[55px] text-gray-300 relative place-content-center w-[100%]">
             <button @click.prevent="preview = false" class="w-[70px] h-[30px] rounded-lg font-semibold hover:bg-gray-200 hover:text-[#222222] text-[20px]" :class="(preview == false ? 'text-purple-400' : '')">
@@ -54,9 +85,11 @@
 import {ref, computed } from 'vue';
 import {marked} from 'marked';
 import {supabase} from '../includes/supabase';
+import {useProfileStore} from '../stores/profile';
 
     export default{
         setup(){
+            const profileStore = useProfileStore();
 
             // async function getBlogs(){
             //     try{
@@ -80,15 +113,42 @@ import {supabase} from '../includes/supabase';
                 image: "required",
                 title: "required",
                 content: "required|min:200",
+                heading: "required|min:20",
             });
 
             const markdown = computed(() => {
                 return marked(content.value);
             });
 
-            function publishBlog(values){
+            async function publishBlog(values){
                 console.log(values);
+                let imgUrl = `https://rbvjgzheadvqlgviwvuv.supabase.co/storage/v1/object/public/blog-imgs/${profileStore.user.name}-${values.title}.png`;
+                try{
+                    const {data,error} = await supabase.from('Blogs')
+                    .insert({title:values.title, authorID: profileStore.user.id, authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl});
+                    if(error)throw error;
+                    else{ console.log('added to table');}
+                }catch(error){
+                    console.log(error);
+                }
+
+                uploadBlogImg(profileStore.user.name,values.title,values.image);
             }
+
+
+            async function uploadBlogImg(authorName,title,img){
+                try{
+                    const { data, error } = await supabase.storage.from('blog-imgs').upload(`${authorName}-${title}.png`, img, {cacheControl: '3600',upsert: true});
+                    if(error) throw error;
+                    else{
+                        console.log("image uploaded");
+                    }
+                }catch(error){
+                    console.log(error);
+                }
+            }
+           
+
             return{
                 title,
                 content,
