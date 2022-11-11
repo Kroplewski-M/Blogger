@@ -9,6 +9,7 @@
 <script>
 import Nav from './components/Nav.vue';
 import {useProfileStore} from './stores/profile';
+import {useBlogStore} from './stores/blogs';
 import {supabase} from './includes/supabase';
 
 
@@ -18,14 +19,16 @@ export default{
   },
   setup(){
     const profileStore = useProfileStore();
-
+    const blogStore = useBlogStore();
 
         async function getBlogs(){
             try{
                 const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorName,header, content, imageUrl, likeCount, created_at');
                 if(error) throw error;
                 else{
-                    console.log(blogs);
+                    //console.log(blogs);
+                    blogStore.blogs = blogs;
+                    console.log(blogStore.blogs[0])
                 }
             }catch(error){
                 console.log(error);
