@@ -117,7 +117,7 @@ import {useProfileStore} from '../stores/profile';
 
                 try{
                     const {data,error} = await supabase.from('Blogs')
-                    .insert({title:values.title, authorID: profileStore.user.id, authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl});
+                    .insert({title:values.title, authorID: profileStore.user.id,authorAvatarUrl: profileStore.user.avatarUrl,authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl});
                     if(error)throw error;
                     else{ console.log('added to table');}
                 }catch(error){

@@ -23,18 +23,16 @@ export default{
 
     async function getBlogs(){
       try{
-          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorName,header, content, imageUrl, likeCount, created_at');
+          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorAvatarUrl,authorName,header, content, imageUrl, likeCount, created_at');
           if(error) throw error;
           else{
              blogStore.blogs = blogs;
-              console.log(blogStore.blogs[0])
             }
         }catch(error){
             console.log(error);
         }
         }
       getBlogs();
-    
 
     //SIGN USER IN IF LOGGED IN ON PREV SESSION
     function getToken(){
