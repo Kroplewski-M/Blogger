@@ -21,20 +21,20 @@ export default{
     const profileStore = useProfileStore();
     const blogStore = useBlogStore();
 
-        async function getBlogs(){
-            try{
-                const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorName,header, content, imageUrl, likeCount, created_at');
-                if(error) throw error;
-                else{
-                    //console.log(blogs);
-                    blogStore.blogs = blogs;
-                    console.log(blogStore.blogs[0])
-                }
-            }catch(error){
-                console.log(error);
+    async function getBlogs(){
+      try{
+          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorName,header, content, imageUrl, likeCount, created_at');
+          if(error) throw error;
+          else{
+             blogStore.blogs = blogs;
+              console.log(blogStore.blogs[0])
             }
+        }catch(error){
+            console.log(error);
         }
-        getBlogs();
+        }
+      getBlogs();
+    
 
     //SIGN USER IN IF LOGGED IN ON PREV SESSION
     function getToken(){

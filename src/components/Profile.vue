@@ -19,7 +19,7 @@
                     <p class="bg-[#333333] py-[10px] px-[10px] rounded-md">Email: <span class="font-bold text-gray-200 ml-[10px]">{{profileStore.user.email}}</span></p>
                 </div>
                 <div class="w-[170px] md:w-[auto] mx-auto md:mx-0">
-                        <button v-if="updateForm == false" class="mt-5 w-[170px] bg-purple-500 rounded-md text-[#111111]" @click.prevent="logOut">Log out</button>
+                        <button class="mt-5 w-[170px] bg-purple-500 rounded-md text-[#111111]" @click.prevent="logOut">Log out</button>
                 </div>
 
             </div>
