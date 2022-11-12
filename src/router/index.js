@@ -4,6 +4,7 @@ import Register from "../components/Register.vue";
 import Profile from "../components/Profile.vue";
 import createBlog from "../components/createBlog.vue";
 import RenderAllBlogs from "../components/RenderAllBlogs.vue";
+import blog from "../components/blog.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -22,6 +23,10 @@ const router = createRouter({
           next();
         }
       },
+    },
+    {
+      path: "/blog/:blog",
+      component: blog,
     },
     {
       path: "/profile",

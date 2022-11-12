@@ -2,8 +2,7 @@
   <div v-if="this.$route.path != '/register'">
     <Nav v-if="this.$route.path != '/login'"></Nav>
   </div>
-  <!-- <router-view></router-view> -->
-  <blog></blog>
+  <router-view></router-view>
 </template>
 
 <script>
@@ -11,12 +10,11 @@ import Nav from './components/Nav.vue';
 import {useProfileStore} from './stores/profile';
 import {useBlogStore} from './stores/blogs';
 import {supabase} from './includes/supabase';
-import blog from './components/blog.vue';
+
 
 export default{
   components:{
     Nav,
-    blog
   },
   setup(){
     const profileStore = useProfileStore();

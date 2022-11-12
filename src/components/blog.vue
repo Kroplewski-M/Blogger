@@ -31,10 +31,10 @@ import { computed } from 'vue';
 import {marked} from 'marked';
 
 export default{
-    
-    setup(){
+    props:['blog'],
+    setup(props){
+        console.log(props);
         const blogStore = useBlogStore();
-
         const content = computed(() => {
                 return marked(blogStore.blogs[1].content);
             });
