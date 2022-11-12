@@ -25,8 +25,9 @@ const router = createRouter({
       },
     },
     {
-      path: "/blog/:blog",
+      path: "/read/:authorName/:blogName",
       component: blog,
+      props: true,
     },
     {
       path: "/profile",

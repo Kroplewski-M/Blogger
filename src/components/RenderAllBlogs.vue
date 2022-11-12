@@ -2,7 +2,7 @@
     <p class="text-center text-[50px] font-bold text-purple-400">View Blogs</p>
     <section class="max-w-[1000px] w-[100vw] min-h-[100vh] mx-auto mt-16 flex md:flex-wrap flex-col md:flex-row space-y-10 md:space-y-0 mb-10">
         <div v-for="blog in blogStore.blogs">
-            <router-link :to="`/blog/${blog.title}`">
+            <router-link :to="`/read/${blog.authorName}/${blog.title}`">
             <div class="w-[300px] md:w-[310px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mr-5 mb-5">
                 <div class="w-[90%] mx-auto">
                     <img :src='blog.imageUrl' alt="" class="rounded-md mt-[10px] w-[100%] h-[150px]">
