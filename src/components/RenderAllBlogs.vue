@@ -4,7 +4,7 @@
         <div v-for="blog in blogStore.blogs">
             <div class="w-[300px] md:w-[310px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mr-5 mb-5">
                 <div class="w-[90%] mx-auto">
-                    <img :src='blog.imageUrl' alt="" class="rounded-md mt-[10px] w-[100%] md:h-[150px]">
+                    <img :src='blog.imageUrl' alt="" class="rounded-md mt-[10px] w-[100%] h-[150px]">
                 </div>
                 <h1 class="text-center text-gray-200 ">{{blog.title}}</h1>
                 <p class="text-center text-gray-500 -mt-[10px]">{{blog.header}}</p>
