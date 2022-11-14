@@ -59,7 +59,6 @@ export default{
     setup(props){
         let loading = ref(true);
         const blogStore = useBlogStore();
-        console.log(props);
         function getMarked(content){
             return marked(content);
         };

@@ -1,5 +1,5 @@
 <template>
-    <nav class="w-[100vw] bg-[#222222] text-purple-400 flex relative flex-col space-y-10 md:space-y-0 md:flex-row" :class="(mobileNav == 'hidden'? 'h-[70px]' : 'h-[auto]')">
+    <nav class="modal w-[100vw] bg-[#222222] text-purple-400 flex relative flex-col space-y-10 md:space-y-0 md:flex-row" :class="(mobileNav == 'hidden'? 'h-[70px]' : 'h-[auto]')">
         <div @click.prevent="this.$router.push('/')" class="flex md:ml-10 ml-5 hover:cursor-pointer  relative z-50 w-[100%] md:w-[auto] place-content-center md:place-content-start pr-[70px] md:pr-[0px]" :class="(mobileNav == 'hidden'? 'mt-[15px]' : 'mt-10')">
             <img src="@/assets/logo.png" alt="" class="w-[40px] h-[40px]">
             <p class="font-bold md:text-[25px] text-[35px] ml-[10px] -mt-[7px] md:mt-0">Blogger</p>
@@ -63,7 +63,6 @@ export default{
         let mobileNav = ref('hidden');
         let windowWidth = ref(window.innerWidth);
         function toggleMobileNav(){
-            console.log("here")
             if(mobileNav.value == "hidden"){
                 mobileNav.value = "";
             }else{
@@ -86,6 +85,11 @@ export default{
             if(mobileNav.value != 'hidden') mobileNav.value = 'hidden';
             window.location.href = '/profile';
         }
+        document.addEventListener('click', (event)=>{
+            if(!event.target.closest('.modal')){
+                accountPopUp.value = false;
+            }
+        });
         return{
             accountPopUp,
             mobileNav,
