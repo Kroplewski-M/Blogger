@@ -21,13 +21,30 @@
         <div class="md:w-[700px] w-[90vw] mx-auto">
             <div class="text-gray-100" v-html="getMarked(blogInfo[0].content)"></div> 
         </div>
-
+    </section>
+    <section class="w-[100vw] mt-10 mb-10">
+        <div class="md:w-[700px] mx-auto">
+            <h1 class="text-gray-200">Comments</h1>
+            <!-- Write a comment -->
+            <div class="w-[100%] min-h-[120px] bg-[#222222] mb-5 rounded-md">
+                <textarea class="w-[95%] bg-transparent focus:outline-none ml-[10px] text-gray-100 mt-5" placeholder="Write a comment..."></textarea>
+                <button class="w-[100px] h-[25px] bg-gray-300 font-semibold text-[#222222] rounded-md ml-[10px]">comment</button>
+            </div>
+            <!-- render all comments -->
+            <div class="w-[100%] min-h-[100px] bg-[#222222] rounded-md">
+                <div class="flex relative">
+                    <img :src="blogInfo[0].authorAvatarUrl" alt="" class="w-[40px] h-[40px] rounded-full ml-[10px] mt-[5px]">
+                    <p class="text-gray-300 font-semibold ml-[10px]">{{authorName}}</p>
+                    <p class="text-gray-500 absolute right-5">{{blogInfo[0].created_at}}</p>
+                </div>
+                <p class="text-gray-200 ml-[10px] mt-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut fugiat ipsa tempore amet rerum dolorum, eius consequatur necessitatibus facilis laboriosam.</p>
+            </div>
+        </div>
     </section>
 </template>
 
 <script>
 import {useBlogStore} from '../stores/blogs';
-import { computed } from 'vue';
 import {marked} from 'marked';
 import {supabase} from '../includes/supabase';
 import { ref } from 'vue';
