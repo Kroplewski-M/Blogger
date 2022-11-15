@@ -22,7 +22,7 @@ export default{
 
     async function getBlogs(){
       try{
-          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorAvatarUrl,authorName,header, content, imageUrl, likeCount, created_at');
+          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorAvatarUrl,authorName,header, content, imageUrl, created_at');
           if(error) throw error;
           else{
              blogStore.blogs = blogs;

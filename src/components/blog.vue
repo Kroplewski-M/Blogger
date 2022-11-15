@@ -15,9 +15,9 @@
     
                     <div class="absolute right-5 flex">
                         <p class="text-gray-500 ml-5">{{blogInfo[0].created_at}}</p>
-                        <div class="flex">
+                        <div class="flex hover:cursor-pointer" @click.prevent="likeBlog">
                             <img src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
-                            <p class="text-gray-400">{{blogInfo[0].likeCount}}</p>
+                            <p class="text-gray-400">{{amountOfLikes}}</p>
                         </div>
                     </div>
                 </div>
@@ -53,12 +53,15 @@ import {useBlogStore} from '../stores/blogs';
 import {marked} from 'marked';
 import {supabase} from '../includes/supabase';
 import { ref } from 'vue';
+import {useProfileStore} from '../stores/profile';
+
 
 export default{
     props:['blogName', 'authorName'],
     setup(props){
-        let loading = ref(true);
+        const profileStore = useProfileStore();
         const blogStore = useBlogStore();
+        let loading = ref(true);
         function getMarked(content){
             return marked(content);
         };
@@ -72,14 +75,48 @@ export default{
         async function getBlog(){
             try{
                 let { data: Blog, error } = await supabase.from('Blogs')
-                .select('id,authorAvatarUrl,content,imageUrl,likeCount,created_at,header').eq('title', String(props.blogName.replace(/-/g, ' '))).eq('authorName', props.authorName.replace(/-/g, ' '));
+                .select('id,authorAvatarUrl,content,imageUrl,created_at,header').eq('title', String(props.blogName.replace(/-/g, ' '))).eq('authorName', props.authorName.replace(/-/g, ' '));
                 if(error) throw error;
                 else{
                     blogInfo.value= Blog; 
                     loading.value = false;
+                    calcLikes();
                 }
             }catch(error){
                 console.log(error);
+            }
+        }
+        //CALC AMOUNT OF LIKES FOR THIS BLOG
+        let allBlogLikes = ref('');
+        let liked = ref();
+        let amountOfLikes= ref('');
+        async function calcLikes(){
+            try{
+                const { data, error } = await supabase.from('blogLikes').select('id,blogID,userid');
+                if(error) throw error;
+                else{
+                    allBlogLikes.value = data;
+                    console.log(allBlogLikes.value);
+
+                    liked.value = ref(allBlogLikes.value.filter(function(like){return like.blogID == (blogInfo.value[0].id)}));
+                    amountOfLikes.value = liked.value._value.length;
+                    console.log(liked.value);
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }
+        
+        //CHECK IF BLOG IS LIKED ALREADY
+        async function isLiked(){}
+        //LIKE/UNLIKE THE BLOG THE BLOG 
+        async function likeBlog(){
+            try{
+                const {data,error} = await supabase.from('blogLikes').insert({blogID:blogInfo.value[0].id, userid:profileStore.user.id});
+                if(error) throw error;
+                else {console.log('liked blog')}
+            }catch(error){
+                alert.log(`Error occured: ${error}`);
             }
         }
         getBlog();
@@ -89,7 +126,9 @@ export default{
             authorName,
             blogInfo,
             getMarked,
-            loading
+            loading,
+            likeBlog,
+            amountOfLikes,
         }
     }
 }
