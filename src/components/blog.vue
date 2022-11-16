@@ -23,7 +23,7 @@
                     </div>
                 </div>
             </div>
-            <div class="md:w-[700px] w-[90vw] mx-auto">
+            <div class="md:w-[800px] w-[90vw] mx-auto bg-[#222222]/50 px-5 rounded-md mt-5">
                 <div class="text-gray-100" v-html="getMarked(blogInfo[0].content)"></div> 
             </div>
         </section>

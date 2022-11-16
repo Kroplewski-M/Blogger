@@ -26,6 +26,7 @@ export default{
           if(error) throw error;
           else{
              blogStore.blogs = blogs;
+             blogStore.blogs.forEach(el => getLikes(el));
             }
         }catch(error){
             console.log(error);
@@ -60,6 +61,18 @@ export default{
       }catch(error){
         console.log(error);
       }
+    }
+
+    async function getLikes(el){
+        try{
+            let { data, error } = await supabase.from('blogLikes').select('id,blogID,userid').eq('blogID', el.id);
+            if(error) throw error;
+            else{
+                el.likes = data.length;
+            }
+        }catch(error){
+            console.log(error);
+        }
     }
 
    }

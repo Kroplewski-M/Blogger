@@ -19,7 +19,7 @@
                         <p class="mt-[4px] ml-[10px] text-gray-500">{{blog.created_at}}</p>
                         <div class="flex absolute right-5 bottom-1">
                             <img src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px]">
-                            <p class="text-gray-500 -mt-[1px]">0</p>
+                            <p class="text-gray-500 -mt-[1px]">{{blog.likes}}</p>
                         </div>
                     </div>
                 </div>
