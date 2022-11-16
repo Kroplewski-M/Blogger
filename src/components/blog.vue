@@ -16,7 +16,8 @@
                     <div class="absolute right-5 flex">
                         <p class="text-gray-500 ml-5">{{blogInfo[0].created_at}}</p>
                         <div class="flex hover:cursor-pointer" @click.prevent="likeBlog">
-                            <img src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
+                            <img v-if="liked" src="@/assets/liked.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
+                            <img v-else src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
                             <p class="text-gray-400">{{amountOfLikes}}</p>
                         </div>
                     </div>
@@ -87,36 +88,59 @@ export default{
             }
         }
         //CALC AMOUNT OF LIKES FOR THIS BLOG
-        let allBlogLikes = ref('');
-        let liked = ref();
+        let blogLikes = ref('');
+        let liked = ref(false);
         let amountOfLikes= ref('');
+        let isLikedID = ref('');
+
         async function calcLikes(){
             try{
-                const { data, error } = await supabase.from('blogLikes').select('id,blogID,userid');
+                const { data, error } = await supabase.from('blogLikes').select('id,blogID,userid').eq('blogID', blogInfo.value[0].id);
                 if(error) throw error;
                 else{
-                    allBlogLikes.value = data;
-                    console.log(allBlogLikes.value);
-
-                    liked.value = ref(allBlogLikes.value.filter(function(like){return like.blogID == (blogInfo.value[0].id)}));
-                    amountOfLikes.value = liked.value._value.length;
-                    console.log(liked.value);
+                    blogLikes.value = data;
+                    amountOfLikes.value = blogLikes.value.length;
+                    //IS LIKED BY CURRENT USER
+                    for(let i = 0; i < blogLikes.value.length;i++){        
+                        if(blogLikes.value[i].blogID == blogInfo.value[0].id && blogLikes.value[i].userid == profileStore.user.id){
+                            liked.value = true;
+                            isLikedID.value = blogLikes.value[i].id;
+                        }else{
+                            liked.value = false;
+                        }
+                    }
                 }
             }catch(error){
                 console.log(error);
             }
         }
         
-        //CHECK IF BLOG IS LIKED ALREADY
-        async function isLiked(){}
         //LIKE/UNLIKE THE BLOG THE BLOG 
         async function likeBlog(){
-            try{
-                const {data,error} = await supabase.from('blogLikes').insert({blogID:blogInfo.value[0].id, userid:profileStore.user.id});
-                if(error) throw error;
-                else {console.log('liked blog')}
-            }catch(error){
-                alert.log(`Error occured: ${error}`);
+            if(!liked.value){
+                try{
+                    const {data,error} = await supabase.from('blogLikes').upsert({blogID:blogInfo.value[0].id, userid:profileStore.user.id}).select();
+                    if(error) throw error;
+                    else {
+                        amountOfLikes.value++;
+                        liked.value = true;
+                        isLikedID.value = data[0].id;
+                    }
+                }catch(error){
+                    alert(`Error occured: ${error}`);
+                }
+            }
+            else{
+                try{
+                    const { data, error } = await supabase.from('blogLikes').delete().match({ id: isLikedID.value });
+                    if(error) throw error;
+                    else{
+                        liked.value = false;
+                        amountOfLikes.value--;
+                    }
+                }catch(error){
+                    console.log(error);
+                }
             }
         }
         getBlog();
@@ -129,6 +153,7 @@ export default{
             loading,
             likeBlog,
             amountOfLikes,
+            liked
         }
     }
 }
