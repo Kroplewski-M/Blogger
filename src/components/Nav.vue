@@ -6,7 +6,7 @@
         </div>
         <div class="flex flex-col md:flex-row text-center space-y-5 md:space-y-0 mx-auto pt-[20px] relative z-50 md:inline" :class="mobileNav">
             <input type="text" name="" id="" placeholder="Search for Blogs" class="w-[300px] h-[30px] rounded-md bg-[#333333] font-semibold pl-[5px] md:mr-10" :class="(mobileNav == 'hidden'? '' : 'hidden')">
-            <a href="#" @click.prevent="this.$router.push('create-blog')" class="font-bold text-purple-400 no-underline" :class="(mobileNav == 'hidden'? '' : 'text-[30px]')">Write Blog</a>
+            <a href="#" @click.prevent="this.$router.push('/create-blog')" class="font-bold text-purple-400 no-underline" :class="(mobileNav == 'hidden'? '' : 'text-[30px]')">Write Blog</a>
         </div>
         <div class="float-right hover:cursor-pointer md:relative md:mr-5 z-50 md:inline mx-auto md:mx-0 md:mt-0" :class="(mobileNav == 'hidden'? 'mt-[15px] hidden' : ' pt-[70px] w-[70px] md:w-[55px]')" @click.prevent="accountPopUp = !accountPopUp">
             <img v-if="profileStore.user.id == undefined" src="@/assets/user.png" alt="" class="w-[70px] h-[70px] md:h-[55px] md:w-[55px] rounded-full bg-[#333333] mr-5 mt-[7px]">
@@ -33,9 +33,9 @@
             <div v-if="profileStore.user.id == undefined">
                 <img src="@/assets/close.png" class="w-[20px] float-right mr-[10px] mt-[10px] hover:cursor-pointer" alt=""  @click.prevent="accountPopUp = !accountPopUp">
                 <p class="font-semibold">You are not logged in!</p>
-                <button @click.prevent="this.$router.push('login'), accountPopUp = false" class="bg-[#111111] w-[130px] h-[30px] rounded-sm text-gray-300 font-bold">Login Now!</button>
+                <button @click.prevent="this.$router.push('/login'), accountPopUp = false" class="bg-[#111111] w-[130px] h-[30px] rounded-sm text-gray-300 font-bold">Login Now!</button>
                 <p>Or</p>
-                <button @click.prevent="this.$router.push('register'), accountPopUp = false" class="bg-[#111111] w-[180px] h-[40px] rounded-sm text-gray-300 font-bold">Register an account!</button>
+                <button @click.prevent="this.$router.push('/register'), accountPopUp = false" class="bg-[#111111] w-[180px] h-[40px] rounded-sm text-gray-300 font-bold">Register an account!</button>
             </div>
             <!-- USER IS LOGGED IN -->
             <div v-else>

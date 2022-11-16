@@ -103,13 +103,6 @@ export default{
                     //IS LIKED BY CURRENT USER
                     
                     for(let i = 0; i < blogLikes.value.length;i++){        
-                        console.log(blogLikes.value[i].blogID);
-                        console.log(blogInfo.value[0].id);
-                        console.log('=============');
-                        console.log(blogLikes.value[i].userid);
-                        console.log(profileStore.user.id);
-                        console.log('=============');
-                        console.log('=============');
                         if((blogLikes.value[i].blogID == blogInfo.value[0].id) && (blogLikes.value[i].userid == profileStore.user.id)){
                             liked.value = true;
                             isLikedID.value = blogLikes.value[i].id;
