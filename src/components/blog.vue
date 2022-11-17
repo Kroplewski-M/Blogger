@@ -7,18 +7,22 @@
             <div class="md:w-[500px] w-[100vw] mx-auto mt-10">
                 <img :src="blogInfo[0].imageUrl"
                 class="md:w-[500px] w-[90%] mx-auto rounded-md">
-                <h1 class="font-bold text-[30px] text-gray-200 text-center">{{blogTitle}}</h1>
+                <div class="w-[300px] mx-auto">
+                    <div v-if="!canLike" class="absolute w-[300px] h-[30px] rounded-md bg-red-700 mt-[10px]">
+                        <p class="text-center font-bold text-gray-200 my-0 py-0">You must be logged in to like!</p>
+                    </div>
+                </div>
+                <h1 class="font-bold text-[30px] text-gray-200 text-center mt-10">{{blogTitle}}</h1>
                 <p class="text-center text-gray-500 -mt-5 w-[90%] mx-auto md:mx-0 md:w-[auto]">{{blogInfo[0].header}}</p>
                 <div class="flex w-[100%] relative">
                     <img :src="blogInfo[0].authorAvatarUrl" class="w-[50px] h-[50px] rounded-full">
                     <p class="text-gray-500 ml-5">{{authorName}}</p>
-    
                     <div class="absolute right-5 flex">
                         <p class="text-gray-500 ml-5">{{blogInfo[0].created_at}}</p>
-                        <div class="flex hover:cursor-pointer" @click.prevent="likeBlog">
-                            <img v-if="liked" src="@/assets/liked.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
-                            <img v-else src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
-                            <p class="text-gray-400">{{amountOfLikes}}</p>
+                            <div class="flex hover:cursor-pointer" @click.prevent="likeBlog">
+                                <img v-if="liked" src="@/assets/liked.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
+                                <img v-else src="@/assets/like.png" alt="" class="w-[20px] h-[20px] mr-[5px] mt-[15px] ml-5">
+                                <p class="text-gray-400">{{amountOfLikes}}</p>
                         </div>
                     </div>
                 </div>
@@ -29,7 +33,12 @@
         </section>
         <section class="w-[100vw] mt-10 mb-10">
             <div class="md:w-[700px] mx-auto">
-                <h1 class="text-gray-200">Comments</h1>
+                <div class="flex">
+                    <h1 class="text-gray-200">Comments</h1>
+                    <div v-if="!canComment" class="ml-10 w-[300px] h-[30px] rounded-md bg-red-700 mt-[15px]">
+                        <p class="text-center font-bold text-gray-200 my-0 py-0">You must be logged in to comment!</p>
+                    </div>
+                </div>
                 <!-- Write a comment -->
                 <div class="w-[100%] min-h-[110px] bg-[#222222] mb-5 rounded-md">
                 <vee-form :validation-schema="schema" @submit="addComment">
@@ -56,7 +65,7 @@
 import {useBlogStore} from '../stores/blogs';
 import {marked} from 'marked';
 import {supabase} from '../includes/supabase';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import {useProfileStore} from '../stores/profile';
 
 
@@ -122,8 +131,17 @@ export default{
         }
         
         //LIKE/UNLIKE THE BLOG THE BLOG 
+        let canLike = ref(true);
+        watch(canLike, ()=>{
+            if(canLike){
+                setTimeout(() => {
+                    canLike.value = true;
+                }, "1000")
+            }
+        })
         async function likeBlog(){
             if(profileStore.user.id != undefined){
+                canLike.value = true;
                 if(!liked.value){
                     try{
                         const {data,error} = await supabase.from('blogLikes').upsert({blogID:blogInfo.value[0].id, userid:profileStore.user.id}).select();
@@ -151,7 +169,7 @@ export default{
                 }
             }
             else{
-                console.log('you are not logged in!');
+                canLike.value = false;
             }
         }
         getBlog();
@@ -159,9 +177,18 @@ export default{
         let schema= ref({
             comment: "required",
         });
+        let canComment = ref(true);
+        watch(canComment, ()=>{
+            if(canComment){
+                setTimeout(() => {
+                    canComment.value = true;
+                }, "1000")
+            }
+        })
         //ADD COMMENT
         async function addComment(values, { resetForm }){
             if(profileStore.user.id != undefined){
+                canComment.value = true;
                 let date = new Date();
                 let year = date.getFullYear();
                 let month = date.getMonth() + 1;
@@ -172,7 +199,8 @@ export default{
                         .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
                     if(error) throw error;
                     else {
-                        allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`, userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
+                        allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`,
+                        userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
                         resetForm();
                     }
                 }catch(error){
@@ -181,7 +209,7 @@ export default{
 
             }
             else{
-                console.log("you are not logged in!");
+                canComment.value = false;
             }
 
         };
@@ -213,6 +241,7 @@ export default{
                 console.log(error);
             }
         }
+
         return{
             blogStore,
             blogTitle,
@@ -226,6 +255,8 @@ export default{
             addComment,
             schema,
             allComments,
+            canComment,
+            canLike
         }
     }
 }
