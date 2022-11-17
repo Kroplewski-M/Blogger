@@ -156,12 +156,17 @@ export default{
         });
         //ADD COMMENT
         async function addComment(values, { resetForm }){
+            let date = new Date();
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let dayOfMonth = date.getDate();
+
             try{
                 const {data,error} = await supabase.from('blogComments')
                     .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
                 if(error) throw error;
                 else {
-                    console.log('added comment');
+                    allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`, userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
                     resetForm();
                 }
             }catch(error){
@@ -171,7 +176,7 @@ export default{
         };
 
         //GET ALL COMMENTS FOR BLOG
-        let allComments = ref({});
+        let allComments = ref([]);
         async function getComments(){
             try{
                 const {data,error} = await supabase.from('blogComments').select('user_id,content,created_at').eq('blogID', blogInfo.value[0].id);
@@ -195,8 +200,6 @@ export default{
                 }
             }catch(error){
                 console.log(error);
-            }finally{
-                console.log(allComments.value);
             }
         }
         return{
