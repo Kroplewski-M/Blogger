@@ -156,21 +156,27 @@ export default{
         });
         //ADD COMMENT
         async function addComment(values, { resetForm }){
-            let date = new Date();
-            let year = date.getFullYear();
-            let month = date.getMonth() + 1;
-            let dayOfMonth = date.getDate();
+            if(profileStore.user.id != undefined){
+                let date = new Date();
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let dayOfMonth = date.getDate();
 
-            try{
-                const {data,error} = await supabase.from('blogComments')
-                    .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
-                if(error) throw error;
-                else {
-                    allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`, userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
-                    resetForm();
+                try{
+                    const {data,error} = await supabase.from('blogComments')
+                        .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
+                    if(error) throw error;
+                    else {
+                        allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`, userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
+                        resetForm();
+                    }
+                }catch(error){
+                    console.log(error);
                 }
-            }catch(error){
-                console.log(error);
+
+            }
+            else{
+                console.log("you are not logged in!");
             }
 
         };
