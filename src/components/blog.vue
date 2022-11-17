@@ -39,13 +39,13 @@
                 </vee-form>
                 </div>
                 <!-- render all comments -->
-                <div class="w-[100%] min-h-[100px] bg-[#222222] rounded-md">
+                <div v-for="comment in allComments" class="w-[100%] min-h-[100px] bg-[#222222] rounded-md mb-5">
                     <div class="flex relative">
-                        <img :src="blogInfo[0].authorAvatarUrl" alt="" class="w-[40px] h-[40px] rounded-full ml-[10px] mt-[5px]">
-                        <p class="text-gray-300 font-semibold ml-[10px]">{{authorName}}</p>
-                        <p class="text-gray-500 absolute right-5">{{blogInfo[0].created_at}}</p>
+                        <img :src="comment.userAvatar" alt="" class="w-[40px] h-[40px] rounded-full ml-[10px] mt-[5px]">
+                        <p class="text-gray-300 font-semibold ml-[10px]">{{comment.username}}</p>
+                        <p class="text-gray-500 absolute right-5">{{comment.created_at}}</p>
                     </div>
-                    <p class="text-gray-200 ml-[10px] mt-0">Lorem ipsum dolor sit amet consectetur adipisicing elit. Aut fugiat ipsa tempore amet rerum dolorum, eius consequatur necessitatibus facilis laboriosam.</p>
+                    <p class="text-gray-200 ml-[10px] mt-0">{{comment.content}}</p>
                 </div>
             </div>
         </section>
@@ -85,6 +85,7 @@ export default{
                     blogInfo.value= Blog; 
                     loading.value = false;
                     calcLikes();
+                    getComments();
                 }
             }catch(error){
                 console.log(error);
@@ -153,19 +154,51 @@ export default{
         let schema= ref({
             comment: "required",
         });
-
-        async function addComment(values){
+        //ADD COMMENT
+        async function addComment(values, { resetForm }){
             try{
                 const {data,error} = await supabase.from('blogComments')
                     .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
                 if(error) throw error;
                 else {
                     console.log('added comment');
+                    resetForm();
                 }
             }catch(error){
                 console.log(error);
             }
+
         };
+
+        //GET ALL COMMENTS FOR BLOG
+        let allComments = ref({});
+        async function getComments(){
+            try{
+                const {data,error} = await supabase.from('blogComments').select('user_id,content,created_at').eq('blogID', blogInfo.value[0].id);
+                if(error) throw error;
+                else{
+                    allComments.value = data;
+                    allComments.value.forEach(comment => getCommentUsers(comment));
+                }
+            }catch(error){
+                console.log(erorr);
+            }
+        };
+        //GET ALL COMMENT PROFILES
+        async function getCommentUsers(comment){
+            try{
+                const {data,error} = await supabase.from('Users').select('Name,AvatarUrl').eq('id',comment.user_id);
+                if(error) throw error;
+                else{
+                    comment.username = data[0].Name;
+                    comment.userAvatar = data[0].AvatarUrl;
+                }
+            }catch(error){
+                console.log(error);
+            }finally{
+                console.log(allComments.value);
+            }
+        }
         return{
             blogStore,
             blogTitle,
@@ -177,7 +210,8 @@ export default{
             amountOfLikes,
             liked,
             addComment,
-            schema
+            schema,
+            allComments,
         }
     }
 }
