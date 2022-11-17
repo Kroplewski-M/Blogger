@@ -123,30 +123,35 @@ export default{
         
         //LIKE/UNLIKE THE BLOG THE BLOG 
         async function likeBlog(){
-            if(!liked.value){
-                try{
-                    const {data,error} = await supabase.from('blogLikes').upsert({blogID:blogInfo.value[0].id, userid:profileStore.user.id}).select();
-                    if(error) throw error;
-                    else {
-                        amountOfLikes.value++;
-                        liked.value = true;
-                        isLikedID.value = data[0].id;
+            if(profileStore.user.id != undefined){
+                if(!liked.value){
+                    try{
+                        const {data,error} = await supabase.from('blogLikes').upsert({blogID:blogInfo.value[0].id, userid:profileStore.user.id}).select();
+                        if(error) throw error;
+                        else {
+                            amountOfLikes.value++;
+                            liked.value = true;
+                            isLikedID.value = data[0].id;
+                        }
+                    }catch(error){
+                        alert(`Error occured: ${error}`);
                     }
-                }catch(error){
-                    alert(`Error occured: ${error}`);
+                }
+                else{
+                    try{
+                        const { data, error } = await supabase.from('blogLikes').delete().match({ id: isLikedID.value });
+                        if(error) throw error;
+                        else{
+                            liked.value = false;
+                            amountOfLikes.value--;
+                        }
+                    }catch(error){
+                        console.log(error);
+                    }
                 }
             }
             else{
-                try{
-                    const { data, error } = await supabase.from('blogLikes').delete().match({ id: isLikedID.value });
-                    if(error) throw error;
-                    else{
-                        liked.value = false;
-                        amountOfLikes.value--;
-                    }
-                }catch(error){
-                    console.log(error);
-                }
+                console.log('you are not logged in!');
             }
         }
         getBlog();
