@@ -32,8 +32,11 @@
                 <h1 class="text-gray-200">Comments</h1>
                 <!-- Write a comment -->
                 <div class="w-[100%] min-h-[110px] bg-[#222222] mb-5 rounded-md">
-                    <textarea class="w-[95%] bg-transparent focus:outline-none ml-[10px] text-gray-100 mt-5 resize-none" placeholder="Write a comment..."></textarea>
+                <vee-form :validation-schema="schema" @submit="addComment">
+                    <vee-field as="textarea" type="textarea" name='comment' class="w-[95%] bg-transparent focus:outline-none ml-[10px] text-gray-100 mt-5 resize-none"
+                     placeholder="Write a comment..." />
                     <button class="w-[100px] h-[25px] bg-gray-300 font-semibold text-[#222222] rounded-md ml-[10px]">comment</button>
+                </vee-form>
                 </div>
                 <!-- render all comments -->
                 <div class="w-[100%] min-h-[100px] bg-[#222222] rounded-md">
@@ -146,6 +149,23 @@ export default{
             }
         }
         getBlog();
+
+        let schema= ref({
+            comment: "required",
+        });
+
+        async function addComment(values){
+            try{
+                const {data,error} = await supabase.from('blogComments')
+                    .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
+                if(error) throw error;
+                else {
+                    console.log('added comment');
+                }
+            }catch(error){
+                console.log(error);
+            }
+        };
         return{
             blogStore,
             blogTitle,
@@ -155,7 +175,9 @@ export default{
             loading,
             likeBlog,
             amountOfLikes,
-            liked
+            liked,
+            addComment,
+            schema
         }
     }
 }
