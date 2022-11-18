@@ -52,6 +52,8 @@
                     <div class="flex relative">
                         <img :src="comment.userAvatar" alt="" class="w-[40px] h-[40px] rounded-full ml-[10px] mt-[5px]">
                         <p class="text-gray-300 font-semibold ml-[10px]">{{comment.username}}</p>
+                        <button v-if="comment.user_id == userID" class="ml-10 px-[10px] bg-red-700 rounded-md h-[30px] mt-[10px] hover:bg-red-800"
+                        @click.prevent="deleteBlog(comment.id)">Delete</button>
                         <p class="text-gray-500 absolute right-5">{{comment.created_at}}</p>
                     </div>
                     <p class="text-gray-200 ml-[10px] mt-0">{{comment.content}}</p>
@@ -73,6 +75,7 @@ export default{
     props:['blogName', 'authorName'],
     setup(props){
         const profileStore = useProfileStore();
+        let userID = ref('');
         const blogStore = useBlogStore();
         let loading = ref(true);
         function getMarked(content){
@@ -105,12 +108,12 @@ export default{
         let liked = ref(false);
         let amountOfLikes= ref('');
         let isLikedID = ref('');
-
         async function calcLikes(){
             try{
                 const { data, error } = await supabase.from('blogLikes').select('id,blogID,userid').eq('blogID', blogInfo.value[0].id);
                 if(error) throw error;
                 else{
+                    userID.value = profileStore.user.id;
                     blogLikes.value = data;
                     amountOfLikes.value = blogLikes.value.length;
                     //IS LIKED BY CURRENT USER
@@ -218,7 +221,7 @@ export default{
         let allComments = ref([]);
         async function getComments(){
             try{
-                const {data,error} = await supabase.from('blogComments').select('user_id,content,created_at').eq('blogID', blogInfo.value[0].id);
+                const {data,error} = await supabase.from('blogComments').select('id,user_id,content,created_at').eq('blogID', blogInfo.value[0].id);
                 if(error) throw error;
                 else{
                     allComments.value = data;
@@ -242,6 +245,10 @@ export default{
             }
         }
 
+        //DELETE BLOG
+        function deleteBlog(blogID){
+            console.log(`delete blog ${blogID}?`)
+        }
         return{
             blogStore,
             blogTitle,
@@ -256,7 +263,9 @@ export default{
             schema,
             allComments,
             canComment,
-            canLike
+            canLike,
+            userID,
+            deleteBlog
         }
     }
 }
