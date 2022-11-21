@@ -5,7 +5,7 @@
             <div class="flex mx-auto w-[220px] mt-10">  
                 <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
                 @click.prevent="deleteCommentPrompt = false">Cancel</button>
-                <button class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
+                <button @click.prevent="deleteComment" class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
     <section v-else>
         <section class="w-[100vw]">
             <div class="md:w-[500px] w-[100vw] mx-auto mt-10">
-                <button v-if="blogInfo[0].authorID == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mb-[10px] hover:bg-red-800"
+                <button v-if="blogInfo[0].authorID == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mb-[10px] hover:bg-red-800 font-bold"
                     @click.prevent="delteBlogPrompt = true">Delete</button>
                 <img :src="blogInfo[0].imageUrl"
                 class="md:w-[500px] w-[90%] mx-auto rounded-md">
@@ -78,7 +78,7 @@
                     </div>
                     <p class="text-gray-200 ml-[10px] mt-0">{{comment.content}}</p>
                     <button v-if="comment.user_id == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mt-[5px] mb-[10px] hover:bg-red-800"
-                    @click.prevent="deleteComment(comment.id)">Delete</button>
+                    @click.prevent="deleteCommentPrompt = true, selectedComment = comment.id">Delete</button>
                 </div>
             </div>
         </section>
@@ -223,10 +223,10 @@ export default{
 
                 try{
                     const {data,error} = await supabase.from('blogComments')
-                        .insert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id});
+                        .upsert({blogID: blogInfo.value[0].id, content: values.comment, user_id: profileStore.user.id}).select();
                     if(error) throw error;
                     else {
-                        allComments.value.push({content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`,
+                        allComments.value.push({id: data[0].id, content: values.comment, created_at: `${year}-${month}-${dayOfMonth}`,
                         userAvatar: profileStore.user.avatarUrl, user_id: profileStore.user.id, username: profileStore.user.name});
                         resetForm();
                     }
@@ -271,11 +271,24 @@ export default{
 
         //DELETE COMMENT
         let deleteCommentPrompt = ref(false);
-        function deleteComment(commentID){
-            deleteCommentPrompt.value = true;
-            console.log(`delete blog ${commentID}?`)
-        }
+        let selectedComment = ref('');
 
+        async function deleteComment(){
+            try{
+                const {error} = await supabase.from('blogComments').delete().eq('id',selectedComment.value);
+                if(error) throw error;
+                else{ 
+                    deleteCommentPrompt.value = false;
+                    for(let i = 0; i < allComments.value.length; i++){
+                        if(allComments.value[i].id == selectedComment.value){
+                            allComments.value.splice(i,1);
+                        }
+                    }
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }
         //DELETE BLOG
         let delteBlogPrompt = ref(false);
         function delteBlog(blogID){
@@ -299,7 +312,8 @@ export default{
             userID,
             deleteComment,
             deleteCommentPrompt,
-            delteBlogPrompt
+            delteBlogPrompt,
+            selectedComment
         }
     }
 }
