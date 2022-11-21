@@ -1,10 +1,32 @@
 <template>
+    <div v-if="deleteCommentPrompt" class="top-0 fixed w-[100vw] h-[100vh] backdrop-blur-md z-50 grid place-content-center"> 
+        <div class="w-[450px] h-[200px] bg-[#222222] rounded-md">
+            <p class="font-bold text-gray-200 text-center mt-5 text-[25px] w-[80%] mx-auto">Are you sure you want to delete your comment?</p>
+            <div class="flex mx-auto w-[220px] mt-10">  
+                <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
+                @click.prevent="deleteCommentPrompt = false">Cancel</button>
+                <button class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
+            </div>
+        </div>
+    </div>
+    <div v-if="delteBlogPrompt" class="top-0 fixed w-[100vw] h-[100vh] backdrop-blur-md z-50 grid place-content-center"> 
+        <div class="w-[450px] h-[200px] bg-[#222222] rounded-md">
+            <p class="font-bold text-gray-200 text-center mt-5 text-[25px] w-[80%] mx-auto">Are you sure you want to delete your blog?</p>
+            <div class="flex mx-auto w-[220px] mt-10">  
+                <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
+                @click.prevent="delteBlogPrompt = false">Cancel</button>
+                <button class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
+            </div>
+        </div>
+    </div>
     <div v-if="loading" class=" w-[100vw] h-[100vh] grid grid-cols-1 place-content-center">
         <p class="text-center text-gray-100 font-bold text-[30px]">loading...</p>
     </div>
     <section v-else>
         <section class="w-[100vw]">
             <div class="md:w-[500px] w-[100vw] mx-auto mt-10">
+                <button v-if="blogInfo[0].authorID == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mb-[10px] hover:bg-red-800"
+                    @click.prevent="delteBlogPrompt = true">Delete</button>
                 <img :src="blogInfo[0].imageUrl"
                 class="md:w-[500px] w-[90%] mx-auto rounded-md">
                 <div class="w-[300px] mx-auto">
@@ -52,11 +74,11 @@
                     <div class="flex relative">
                         <img :src="comment.userAvatar" alt="" class="w-[40px] h-[40px] rounded-full ml-[10px] mt-[5px]">
                         <p class="text-gray-300 font-semibold ml-[10px]">{{comment.username}}</p>
-                        <button v-if="comment.user_id == userID" class="ml-10 px-[10px] bg-red-700 rounded-md h-[30px] mt-[10px] hover:bg-red-800"
-                        @click.prevent="deleteBlog(comment.id)">Delete</button>
                         <p class="text-gray-500 absolute right-5">{{comment.created_at}}</p>
                     </div>
                     <p class="text-gray-200 ml-[10px] mt-0">{{comment.content}}</p>
+                    <button v-if="comment.user_id == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mt-[5px] mb-[10px] hover:bg-red-800"
+                    @click.prevent="deleteComment(comment.id)">Delete</button>
                 </div>
             </div>
         </section>
@@ -82,16 +104,18 @@ export default{
             return marked(content);
         };
 
+        //GET BLOG
         let blogTitle = ref(props.blogName.replace(/-/g, ' '));
         let authorName = ref(props.authorName.replace(/-/g, ' '));
         let blogInfo = ref([{
             imageUrl: '',
             content: '',
+            authorID: '',
         }]);
         async function getBlog(){
             try{
                 let { data: Blog, error } = await supabase.from('Blogs')
-                .select('id,authorAvatarUrl,content,imageUrl,created_at,header').eq('title', String(props.blogName.replace(/-/g, ' '))).eq('authorName', props.authorName.replace(/-/g, ' '));
+                .select('id,authorAvatarUrl,authorID,content,imageUrl,created_at,header').eq('title', String(props.blogName.replace(/-/g, ' '))).eq('authorName', props.authorName.replace(/-/g, ' '));
                 if(error) throw error;
                 else{
                     blogInfo.value= Blog; 
@@ -245,8 +269,16 @@ export default{
             }
         }
 
+        //DELETE COMMENT
+        let deleteCommentPrompt = ref(false);
+        function deleteComment(commentID){
+            deleteCommentPrompt.value = true;
+            console.log(`delete blog ${commentID}?`)
+        }
+
         //DELETE BLOG
-        function deleteBlog(blogID){
+        let delteBlogPrompt = ref(false);
+        function delteBlog(blogID){
             console.log(`delete blog ${blogID}?`)
         }
         return{
@@ -265,7 +297,9 @@ export default{
             canComment,
             canLike,
             userID,
-            deleteBlog
+            deleteComment,
+            deleteCommentPrompt,
+            delteBlogPrompt
         }
     }
 }
