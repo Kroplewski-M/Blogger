@@ -3,7 +3,7 @@
     <section class="max-w-[1000px] w-[100vw] min-h-[100vh] mx-auto mt-16 flex md:flex-wrap flex-col md:flex-row space-y-10 md:space-y-0 mb-10">
         <div v-for="blog in blogStore.blogs">
             <router-link :to="`/read/${blog.authorName.replace(/\s+/g, '-')}/${blog.title.replace(/\s+/g, '-')}`" class="no-underline">
-            <div class="w-[300px] md:w-[310px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mr-5 mb-5">
+            <div class="w-[300px] md:w-[310px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mr-5">
                 <div class="w-[90%] mx-auto">
                     <img :src='blog.imageUrl' alt="" class="rounded-md mt-[10px] w-[100%] h-[150px]">
                 </div>

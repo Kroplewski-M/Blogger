@@ -86,10 +86,13 @@ import {ref, computed } from 'vue';
 import {marked} from 'marked';
 import {supabase} from '../includes/supabase';
 import {useProfileStore} from '../stores/profile';
+import {useBlogStore} from '../stores/blogs';
 
     export default{
         setup(){
             const profileStore = useProfileStore();
+            const blogStore = useBlogStore();
+
             let blogUploading = ref(false);
             let blogUploadState = ref('uploading');
 
@@ -109,33 +112,38 @@ import {useProfileStore} from '../stores/profile';
             const markdown = computed(() => {
                 return marked(content.value);
             });
-
+            let imgUrl = ref('');
             async function publishBlog(values){
                 blogUploading.value = true;
                 blogUploadState.value = 'uploading';
-                let imgUrl = `https://rbvjgzheadvqlgviwvuv.supabase.co/storage/v1/object/public/blog-imgs/${profileStore.user.name}-${values.title}.png`;
+                imgUrl.value = `https://rbvjgzheadvqlgviwvuv.supabase.co/storage/v1/object/public/blog-imgs/${profileStore.user.name}-${values.title}.png`;
 
                 try{
                     const {data,error} = await supabase.from('Blogs')
-                    .insert({title:values.title, authorID: profileStore.user.id,authorAvatarUrl: profileStore.user.avatarUrl,authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl});
+                    .insert({title:values.title, authorID: profileStore.user.id,authorAvatarUrl: profileStore.user.avatarUrl,authorName: profileStore.user.name,header: values.heading, content: values.content, imageUrl: imgUrl.value})
+                    .select();
                     if(error)throw error;
-                    else{ console.log('added to table');}
+                    else{
+                        uploadBlogImg(profileStore.user.name,values.title,values.image,data);
+                    }
                 }catch(error){
                     console.log(error);
                     blogUploadState.value = "error";
                 }
 
-                uploadBlogImg(profileStore.user.name,values.title,values.image);
             }
 
 
-            async function uploadBlogImg(authorName,title,img){
+            async function uploadBlogImg(authorName,title,img,blogInfo){
                 try{
                     const { data, error } = await supabase.storage.from('blog-imgs').upload(`${authorName}-${title}.png`, img, {cacheControl: '3600',upsert: true});
                     if(error) throw error;
                     else{
-                        console.log("image uploaded");
-                    blogUploadState.value = "success";
+                        blogStore.blogs.push({authorAvatarUrl: blogInfo[0].authorAvatarUrl, authorID: blogInfo[0].authorID, authorName: blogInfo[0].authorName,
+                        content:blogInfo[0].content, created_at: blogInfo[0].created_at, header: blogInfo[0].header, id: blogInfo[0].id, likes:0,
+                         title: blogInfo[0].title, imageUrl: imgUrl.value});
+
+                        blogUploadState.value = "success";
                     }
                 }catch(error){
                     console.log(error);

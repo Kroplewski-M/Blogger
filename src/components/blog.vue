@@ -1,12 +1,17 @@
 <template>
     <div v-if="deleteCommentPrompt" class="top-0 fixed w-[100vw] h-[100vh] backdrop-blur-md z-50 grid place-content-center"> 
-        <div class="w-[450px] h-[200px] bg-[#222222] rounded-md">
+        <div v-if="DeleteBlogLoading" class="w-[450px] h-[200px] bg-[#222222] rounded-md">
             <p class="font-bold text-gray-200 text-center mt-5 text-[25px] w-[80%] mx-auto">Are you sure you want to delete your comment?</p>
             <div class="flex mx-auto w-[220px] mt-10">  
                 <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
                 @click.prevent="deleteCommentPrompt = false">Cancel</button>
-                <button @click.prevent="deleteComment" class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
+                <button @click.prevent="deleteComment" :disabled="DeleteBlogLoading"
+                class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
             </div>
+        </div>
+        <div v-else class="w-[450px] h-[200px] bg-[#222222] rounded-md font-bold text-gray-200 text-center text-xl">
+            <p class="mt-[50px]">Please Wait...</p>
+            <p>Deleting your blog...</p>
         </div>
     </div>
     <div v-if="delteBlogPrompt" class="top-0 fixed w-[100vw] h-[100vh] backdrop-blur-md z-50 grid place-content-center"> 
@@ -15,7 +20,7 @@
             <div class="flex mx-auto w-[220px] mt-10">  
                 <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
                 @click.prevent="delteBlogPrompt = false">Cancel</button>
-                <button class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
+                <button @click.prevent="delteAllBlogComments" class="w-[100px] h-[30px] rounded-md bg-red-700 hover:bg-red-900 text-gray-200 font-bold">Delete</button>
             </div>
         </div>
     </div>
@@ -289,10 +294,56 @@ export default{
                 console.log(error);
             }
         }
-        //DELETE BLOG
+        //DELETE BLOG | DELETE ALL LIKES | DELETE ALL COMMENTS | DELETE BLOG PHOTO
         let delteBlogPrompt = ref(false);
-        function delteBlog(blogID){
-            console.log(`delete blog ${blogID}?`)
+        let DeleteBlogLoading = ref(false);
+        async function delteAllBlogComments(){
+            try{
+                DeleteBlogLoading.value = true;
+                const {data,error} = await supabase.from('blogComments').delete().eq('blogID',blogInfo.value[0].id);
+                if(error) throw error;
+                else{
+                    deleteAllBlogLikes();
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }
+        async function deleteAllBlogLikes(){
+            try{
+                const {data,error} = await supabase.from('blogLikes').delete().eq('blogID',blogInfo.value[0].id);
+                if(error) throw error;
+                else{
+                    removeBlogImage();
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }
+        async function removeBlogImage(){
+            try{
+                console.log(`${profileStore.user.name}-${blogTitle.value}.png`);
+                const {data,error} = await supabase.storage.from('blog-imgs').remove([`${profileStore.user.name}-${blogTitle.value}.png`]);
+                if(error) throw error;
+                else{
+                    deleteBlog();
+                }
+            }catch(error){
+                console.log(error);
+            }
+        }
+        async function deleteBlog(){
+            try{
+                const {error} = await supabase.from('Blogs').delete().eq('id',blogInfo.value[0].id);
+                if(error) throw error;
+                else{ 
+                    DeleteBlogLoading.value = false;
+                    document.location.href = '/';
+                }
+            }catch(error){
+                console.log(error);
+            }
+
         }
         return{
             blogStore,
@@ -313,7 +364,10 @@ export default{
             deleteComment,
             deleteCommentPrompt,
             delteBlogPrompt,
-            selectedComment
+            selectedComment,
+            deleteBlog,
+            DeleteBlogLoading,
+            delteAllBlogComments,
         }
     }
 }
