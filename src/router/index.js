@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
-import Profile from "../components/Profile.vue";
-import createBlog from "../components/createBlog.vue";
 import homeView from "@/views/homeView.vue";
+import profileView from "@/views/profileView.vue";
+import createBlogView from "@/views/createBlogView.vue";
+
 import blog from "../components/blog.vue";
 
 const router = createRouter({
@@ -14,7 +15,7 @@ const router = createRouter({
     { path: "/register", component: Register },
     {
       path: "/create-blog",
-      component: createBlog,
+      component: createBlogView,
       beforeEnter: (to, from, next) => {
         let token = localStorage.getItem("sb-rbvjgzheadvqlgviwvuv-auth-token");
         if (token == null) {
@@ -31,7 +32,7 @@ const router = createRouter({
     },
     {
       path: "/profile",
-      component: Profile,
+      component: profileView,
       beforeEnter: (to, from, next) => {
         let token = localStorage.getItem("sb-rbvjgzheadvqlgviwvuv-auth-token");
         if (token == null) {
