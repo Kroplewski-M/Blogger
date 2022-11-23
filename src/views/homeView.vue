@@ -1,12 +1,12 @@
 <template>
 <RenderAllBlogs></RenderAllBlogs>
-
 </template>
 
 <script>
 import RenderAllBlogs from "../components/RenderAllBlogs.vue";
 import {useBlogStore} from '../stores/blogs';
 import {supabase} from '../includes/supabase';
+
 
 
 export default{
@@ -40,6 +40,7 @@ export default{
         }catch(error){
             console.log(error);
         }
+
     }
     }
 }

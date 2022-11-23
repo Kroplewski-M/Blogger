@@ -4,5 +4,6 @@ export const useBlogStore = defineStore({
   id: "blogs",
   state: () => ({
     blogs: [],
+    searchBlog: "",
   }),
 });

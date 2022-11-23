@@ -5,7 +5,7 @@
             <p class="font-bold md:text-[25px] text-[35px] ml-[10px] -mt-[7px] md:mt-0">Blogger</p>
         </div>
         <div class="flex flex-col md:flex-row text-center space-y-5 md:space-y-0 mx-auto pt-[20px] relative z-50 md:inline" :class="mobileNav">
-            <input type="text" name="" id="" placeholder="Search for Blogs" class="w-[300px] h-[30px] rounded-md bg-[#333333] font-semibold pl-[5px] md:mr-10" :class="(mobileNav == 'hidden'? '' : 'hidden')">
+            <input v-model="searchBlog" type="text" name="" id="" placeholder="Search for Blogs" class="w-[300px] h-[30px] rounded-md bg-[#333333] font-semibold pl-[5px] md:mr-10" :class="(mobileNav == 'hidden'? '' : 'hidden')">
             <a href="#" @click.prevent="this.$router.push('/create-blog')" class="font-bold text-purple-400 no-underline" :class="(mobileNav == 'hidden'? '' : 'text-[30px]')">Write Blog</a>
         </div>
         <div class="float-right hover:cursor-pointer md:relative md:mr-5 z-50 md:inline mx-auto md:mx-0 md:mt-0" :class="(mobileNav == 'hidden'? 'mt-[15px] hidden' : ' pt-[70px] w-[70px] md:w-[55px]')" @click.prevent="accountPopUp = !accountPopUp">
@@ -54,7 +54,8 @@
 
 <script>
 import {useProfileStore} from '../stores/profile';
-import {ref} from 'vue'
+import {useBlogStore} from '../stores/blogs';
+import {ref, watch} from 'vue';
 
 export default{
     setup(){
@@ -90,12 +91,21 @@ export default{
                 accountPopUp.value = false;
             }
         });
+
+        //BLOG SEARCH
+        const blogStore = useBlogStore();
+        let searchBlog = ref('');
+
+        watch(searchBlog, ()=>{
+            blogStore.searchBlog = searchBlog.value;
+        });
         return{
             accountPopUp,
             mobileNav,
             toggleMobileNav,
             profileStore,
-            profile
+            profile,
+            searchBlog
         }
     }
 }

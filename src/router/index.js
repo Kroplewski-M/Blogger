@@ -4,7 +4,6 @@ import Register from "../components/Register.vue";
 import homeView from "@/views/homeView.vue";
 import profileView from "@/views/profileView.vue";
 import createBlogView from "@/views/createBlogView.vue";
-
 import blog from "../components/blog.vue";
 
 const router = createRouter({
@@ -32,6 +31,7 @@ const router = createRouter({
     },
     {
       path: "/profile",
+      name: "profile",
       component: profileView,
       beforeEnter: (to, from, next) => {
         let token = localStorage.getItem("sb-rbvjgzheadvqlgviwvuv-auth-token");

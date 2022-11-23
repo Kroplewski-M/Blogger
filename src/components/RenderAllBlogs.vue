@@ -1,7 +1,7 @@
 <template>
     <p class="text-center text-[50px] font-bold text-purple-400">View Blogs</p>
     <section class="max-w-[1000px] w-[100vw] min-h-[100vh] mx-auto mt-16 flex md:flex-wrap flex-col md:flex-row space-y-10 md:space-y-0 mb-10">
-        <div v-for="blog in blogStore.blogs">
+        <div v-for="blog in filteredBlogs">
             <router-link :to="`/read/${blog.authorName.replace(/\s+/g, '-')}/${blog.title.replace(/\s+/g, '-')}`" class="no-underline">
             <div class="w-[300px] md:w-[310px] h-[400px] bg-[#222222] hover:bg-[#333333] rounded-md relative overflow-hidden hover:cursor-pointer mx-auto md:mr-5">
                 <div class="w-[90%] mx-auto">
@@ -31,13 +31,19 @@
 
 <script>
 import {useBlogStore} from '../stores/blogs';
-
+import {ref} from 'vue';
 export default{
     setup(){
     const blogStore = useBlogStore();
 
+
+    let filteredBlogs = ref('');
+    blogStore.$subscribe((mutation,state) =>{
+        filteredBlogs.value = blogStore.blogs.filter(blog => blog.title.toLowerCase().includes(blogStore.searchBlog.toLowerCase()));
+    });
+    
     return{
-        blogStore,
+        filteredBlogs
         }
     }
     }
