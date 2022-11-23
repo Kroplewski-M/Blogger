@@ -8,7 +8,6 @@
 <script>
 import Nav from './components/Nav.vue';
 import {useProfileStore} from './stores/profile';
-import {useBlogStore} from './stores/blogs';
 import {supabase} from './includes/supabase';
 
 
@@ -18,21 +17,6 @@ export default{
   },
   setup(){
     const profileStore = useProfileStore();
-    const blogStore = useBlogStore();
-
-    async function getBlogs(){
-      try{
-          const { data: blogs, error } = await supabase.from('Blogs').select('id, title,authorID,authorAvatarUrl,authorName,header, content, imageUrl, created_at');
-          if(error) throw error;
-          else{
-             blogStore.blogs = blogs;
-             blogStore.blogs.forEach(el => getLikes(el));
-            }
-        }catch(error){
-            console.log(error);
-        }
-        }
-      getBlogs();
 
     //SIGN USER IN IF LOGGED IN ON PREV SESSION
     function getToken(){
@@ -61,18 +45,6 @@ export default{
       }catch(error){
         console.log(error);
       }
-    }
-
-    async function getLikes(el){
-        try{
-            let { data, error } = await supabase.from('blogLikes').select('id,blogID,userid').eq('blogID', el.id);
-            if(error) throw error;
-            else{
-                el.likes = data.length;
-            }
-        }catch(error){
-            console.log(error);
-        }
     }
 
    }

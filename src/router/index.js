@@ -3,13 +3,13 @@ import Login from "../components/Login.vue";
 import Register from "../components/Register.vue";
 import Profile from "../components/Profile.vue";
 import createBlog from "../components/createBlog.vue";
-import RenderAllBlogs from "../components/RenderAllBlogs.vue";
+import homeView from "@/views/homeView.vue";
 import blog from "../components/blog.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: "/", component: RenderAllBlogs },
+    { path: "/", component: homeView },
     { path: "/login", component: Login },
     { path: "/register", component: Register },
     {
@@ -25,7 +25,7 @@ const router = createRouter({
       },
     },
     {
-      path: '/read/:authorName/:blogName',
+      path: "/read/:authorName/:blogName",
       component: blog,
       props: true,
     },
