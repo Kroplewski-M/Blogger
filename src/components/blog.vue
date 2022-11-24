@@ -1,6 +1,6 @@
 <template>
     <div v-if="deleteCommentPrompt" class="top-0 fixed w-[100vw] h-[100vh] backdrop-blur-md z-50 grid place-content-center"> 
-        <div v-if="DeleteBlogLoading" class="w-[450px] h-[200px] bg-[#222222] rounded-md">
+        <div v-if="deleteCommentPrompt" class="w-[450px] h-[200px] bg-[#222222] rounded-md">
             <p class="font-bold text-gray-200 text-center mt-5 text-[25px] w-[80%] mx-auto">Are you sure you want to delete your comment?</p>
             <div class="flex mx-auto w-[220px] mt-10">  
                 <button class="w-[100px] h-[30px] rounded-md bg-gray-300 text-[#222222] hover:bg-gray-400 font-bold mr-5"
@@ -83,7 +83,7 @@
                     </div>
                     <p class="text-gray-200 ml-[10px] mt-0">{{comment.content}}</p>
                     <button v-if="comment.user_id == userID" class="ml-[10px] px-[10px] bg-red-700 rounded-md h-[30px] mt-[5px] mb-[10px] hover:bg-red-800"
-                    @click.prevent="deleteCommentPrompt = true, selectedComment = comment.id">Delete</button>
+                    @click.prevent="deleteCommentPrompt = true, selectedComment = comment.id, deleteComment">Delete</button>
                 </div>
             </div>
         </section>
