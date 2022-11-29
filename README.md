@@ -5,5 +5,3 @@ Blogging website that allows users to create an account or log in. The user will
 
 Tech Stack- VueJS, MarkedJS, TailwindCSS, Supabase
 
-Current issue:
-- Profile page:  page not found on Netlify deployed website
